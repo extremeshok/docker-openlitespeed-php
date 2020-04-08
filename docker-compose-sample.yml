@@ -1,0 +1,24 @@
+version: '3.0'
+########## SERVICES ########
+services:
+###### xshok-openlitespeed-php
+    openlitespeed:
+      image: extremeshok/openlitespeed-php:latest
+      depends_on:
+        - redis
+        - mysql
+      volumes:
+        # volume mounts
+        - vol-www-vhosts:/var/www/vhosts/:rw
+      environment:
+      #optional enviromental varibles
+        - TZ=${TZ}
+      restart: always
+      sysctls:
+        - net.ipv6.conf.all.disable_ipv6=${SYSCTL_IPV6_DISABLED:-0}
+      dns:
+        - ${IPV4_NETWORK:-172.22.1}.254
+      networks:
+        network:
+          aliases:
+          - webserver
