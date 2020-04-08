@@ -1,11 +1,15 @@
-FROM extremeshok/openlitespeed:latest AS BUILD
+FROM extremeshok/openlitespeed:latest AS AS PREBUILD
 LABEL mantainer="Adrian Kriel <admin@extremeshok.com>" vendor="eXtremeSHOK.com"
 
 USER root
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN echo "**** Install PHP ****" \
+################################################
+#### MULTIBUILD: Stage 1 #######################
+################################################
+
+RUN echo "**** Install PHP7.3 ****" \
   && apt-install \
   lsphp73-apcu- \
   lsphp73-common \
@@ -31,8 +35,16 @@ RUN echo "**** Install PHP ****" \
   lsphp73-snmp- \
   lsphp73-sqlite3 \
   lsphp73-sybase- \
-  lsphp73-tidy- \
-# Install PHP7.4 ****"
+  lsphp73-tidy-
+
+################################################
+#### MULTIBUILD: Stage 2 #######################
+################################################
+
+FROM PREBUILD AS BUILD
+
+RUN echo "**** Install PHP7.4 ****" \
+  && apt-install \
   lsphp74-apcu- \
   lsphp74-common \
   lsphp74-curl \
