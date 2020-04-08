@@ -1,4 +1,4 @@
-FROM extremeshok/openlitespeed:latest AS AS BUILD
+FROM extremeshok/openlitespeed:latest AS BUILD
 LABEL mantainer="Adrian Kriel <admin@extremeshok.com>" vendor="eXtremeSHOK.com"
 
 USER root
