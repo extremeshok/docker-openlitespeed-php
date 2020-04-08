@@ -1,5 +1,5 @@
 # docker-openlitespeed-php
-# eXtremeSHOK.com Docker OpenLiteSpeed with mod_security and pagespeed and PHP on Ubuntu 18.04
+# eXtremeSHOK.com Docker OpenLiteSpeed with mod_security and pagespeed and PHP 7.4 on Ubuntu 18.04
 
 * Ubuntu 18.04 with S6
 * cron (/etc/cron.d) enabled for scheduling tasks, run as user nobody
@@ -10,8 +10,7 @@
 * Graceful shutdown
 * accesslog = stdout
 * errorlog = stderr
-* PHP 7.4 ** Default **
-* PHP 7.3
+* PHP 7.4 (lsphp74)
 * Composer
 * PHPUnit
 * WP-CLI
@@ -31,7 +30,6 @@
 * imagick
 * imap
 * intl
-* ioncube ** PHP 7.3 only **
 * json
 * memcached
 * msgpack
@@ -40,6 +38,8 @@
 * pear
 * redis
 * sqlite3
+
+### Note: ioncube ** not supported in php7.4 **
 
 # Usage
 Place files in **/var/www/vhosts/fqdn.com/** , see example **/var/www/vhosts/localhost/**
