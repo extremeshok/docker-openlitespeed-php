@@ -5,33 +5,33 @@ USER root
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-# RUN echo "**** Install PHP7.3 ****" \
-#   && apt-install \
-#   lsphp73-apcu- \
-#   lsphp73-common \
-#   lsphp73-curl \
-#   lsphp73-dev \
-#   lsphp73-igbinary \
-#   lsphp73-imagick  \
-#   lsphp73-imap \
-#   lsphp73-intl- \
-#   lsphp73-ioncube \
-#   lsphp73-json \
-#   lsphp73-ldap- \
-#   lsphp73-memcached \
-#   lsphp73-modules-source- \
-#   lsphp73-msgpack \
-#   lsphp73-mysql \
-#   lsphp73-opcache \
-#   lsphp73-pear \
-#   lsphp73-pgsql- \
-#   lsphp73-pspell- \
-#   lsphp73-recode- \
-#   lsphp73-redis \
-#   lsphp73-snmp- \
-#   lsphp73-sqlite3 \
-#   lsphp73-sybase- \
-#   lsphp73-tidy-
+RUN echo "**** Install PHP7.3 ****" \
+  && apt-install \
+  lsphp73-apcu- \
+  lsphp73-common \
+  lsphp73-curl \
+  lsphp73-dev \
+  lsphp73-igbinary \
+  lsphp73-imagick  \
+  lsphp73-imap \
+  lsphp73-intl- \
+  lsphp73-ioncube \
+  lsphp73-json \
+  lsphp73-ldap- \
+  lsphp73-memcached \
+  lsphp73-modules-source- \
+  lsphp73-msgpack \
+  lsphp73-mysql \
+  lsphp73-opcache \
+  lsphp73-pear \
+  lsphp73-pgsql- \
+  lsphp73-pspell- \
+  lsphp73-recode- \
+  lsphp73-redis \
+  lsphp73-snmp- \
+  lsphp73-sqlite3 \
+  lsphp73-sybase- \
+  lsphp73-tidy-
 
 RUN echo "**** Install PHP7.4 ****" \
   && apt-install \
