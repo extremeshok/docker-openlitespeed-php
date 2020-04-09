@@ -130,7 +130,7 @@ EOF
 fi
 
 echo "#### Checking PHP configs ####"
-/usr/usr/bin/php -t
+/usr/bin/php -t
 result=$?
 if [ "$result" != "0" ] ; then
   echo "ERROR: CONFIG DAMAGED, sleeping ......"
