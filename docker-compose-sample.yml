@@ -13,6 +13,18 @@ services:
       environment:
       #optional enviromental varibles
         - TZ=${TZ}
+        - PHP_TIMEZONE=${TZ}
+        - PHP_REDIS_SESSIONS=yes
+        - PHP_REDIS_HOST=redis
+        - PHP_REDIS_PORT=6379
+        - PHP_MAX_UPLOAD_SIZE=32
+        - PHP_MAX_TIME=300
+        - PHP_MEMORY_LIMIT=256
+        - PHP_DISABLE_FUNCTIONS=shell_exe
+        - PHP_SMTP_HOST=mail.yoursmtp.com
+        - PHP_SMTP_PORT=587
+        - PHP_SMTP_USER=mail@yoursmtp.com
+        - PHP_SMTP_PASS=securpassword
       restart: always
       sysctls:
         - net.ipv6.conf.all.disable_ipv6=${SYSCTL_IPV6_DISABLED:-0}

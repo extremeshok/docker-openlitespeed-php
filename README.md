@@ -3,6 +3,9 @@
 
 * Ubuntu 18.04 with S6
 * cron (/etc/cron.d) enabled for scheduling tasks, run as user nobody
+* Optimized OpenLiteSpeed configs
+* Optimized PHP configs
+* session, memcached, apc serializer set to igbinary
 * OpenLiteSpeed Repository
 * IONICE set to -10
 * Low memory usage
@@ -14,6 +17,27 @@
 * Composer
 * PHPUnit
 * WP-CLI
+* Expose php disabled
+* msmtp enabled: send email via external smtp server, requires SMTP_HOST, SMTP_USER, SMTP_PASS
+
+# PHP options (with defaults)
+* PHP_TIMEZONE=UTC
+* PHP_MAX_TIME=180 (in seconds)
+* PHP_MAX_UPLOAD_SIZE=32 (in mbyte)
+* PHP_MEMORY_LIMIT=256 (in mbyte)
+* PHP_DISABLE_FUNCTIONS=shell_exec (set to false to disable, can use a comma separated list)
+## Enable PHP-Redis-sessions (disabled by default)
+* PHP_REDIS_SESSIONS=yes
+* PHP_REDIS_HOST=redis
+* PHP_REDIS_PORT=6379
+## EXTERNAL SMTP (disabled by default), set hostname, user and pass to enable
+* PHP_SMTP_HOST=mail.yoursmtp.com
+* PHP_SMTP_PORT=587
+* PHP_SMTP_USER=mail@yoursmtp.com
+* PHP_SMTP_PASS=securpassword
+
+# Notes:
+ * PHP74 linked to /usr/bin/php and /usr/local/lsws/fcgi-bin/lsphp
 
 # Included Modules:
 * cache
@@ -24,6 +48,7 @@
 * uploadprogress
 
 # Included PHP Modules
+* apc
 * curl
 * dev
 * igbinary

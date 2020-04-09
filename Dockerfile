@@ -35,7 +35,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN echo "**** Install PHP7.4 ****" \
   && apt-install \
-  lsphp74-apcu- \
+  lsphp74-apcu \
   lsphp74-common \
   lsphp74-curl \
   lsphp74-dev \
@@ -60,11 +60,20 @@ RUN echo "**** Install PHP7.4 ****" \
   lsphp74-sybase- \
   lsphp74-tidy-
 
+
+RUN echo "**** MSMTP ****" \
+  && apt-install msmtp
+
 # When using Composer, disable the warning about running commands as root/super user
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-RUN echo "**** Default to PHP7.4 ****" \
- && ln -s /usr/local/lsws/lsphp74/bin/php /usr/bin/php
+RUN echo "**** Default to PHP7.4 and ccreate symbolic links ****" \
+  && rm -rf /etc/php \
+  && rm -f /usr/bin/php \
+  && rm -f /usr/local/lsws/fcgi-bin/lsphp \
+  && ln -s /usr/local/lsws/lsphp74/etc/php/7.4/ /etc/php \
+  && ln -s /usr/local/lsws/lsphp74/bin/php /usr/bin/php \
+  && ln -s /usr/local/lsws/lsphp74/bin/php /usr/local/lsws/fcgi-bin/lsphp
 
 RUN echo "**** Install Composer ****" \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
