@@ -8,6 +8,7 @@
 shopt -s nocaseglob
 
 ###### DEFAULTS ######
+PHP_INI="/etc/php/litespeed/php.ini"
 ADDITIONAL_PHP_INI="/etc/php/mods-available/"
 
 ###### VARIBLES ######
@@ -130,7 +131,7 @@ EOF
 fi
 
 echo "#### Checking PHP configs ####"
-/usr/bin/php -t
+/usr/bin/php -t ${PHP_INI}
 result=$?
 if [ "$result" != "0" ] ; then
   echo "ERROR: CONFIG DAMAGED, sleeping ......"
