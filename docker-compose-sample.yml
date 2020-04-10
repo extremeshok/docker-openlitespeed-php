@@ -10,6 +10,7 @@ services:
       volumes:
         # volume mounts
         - vol-www-vhosts:/var/www/vhosts/:rw
+        - vol-www-configs:/etc/openlitespeed/:rw
       environment:
       #optional enviromental varibles
         - TZ=${TZ}

@@ -60,20 +60,19 @@ RUN echo "**** Install PHP7.4 ****" \
   lsphp74-sybase- \
   lsphp74-tidy-
 
-
 RUN echo "**** MSMTP ****" \
   && apt-install msmtp
 
-# When using Composer, disable the warning about running commands as root/super user
-ENV COMPOSER_ALLOW_SUPERUSER=1
-
-RUN echo "**** Default to PHP7.4 and ccreate symbolic links ****" \
+RUN echo "**** Default to PHP7.4 and create symbolic links ****" \
   && rm -rf /etc/php \
   && rm -f /usr/bin/php \
   && rm -f /usr/local/lsws/fcgi-bin/lsphp \
   && ln -s /usr/local/lsws/lsphp74/etc/php/7.4/ /etc/php \
   && ln -s /usr/local/lsws/lsphp74/bin/php /usr/bin/php \
   && ln -s /usr/local/lsws/lsphp74/bin/php /usr/local/lsws/fcgi-bin/lsphp
+
+# When using Composer, disable the warning about running commands as root/super user
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 RUN echo "**** Install Composer ****" \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
@@ -92,6 +91,11 @@ RUN echo "**** Install WP-CLI ****" \
     && mv wp-cli.phar /usr/local/bin/wp-cli
 
 COPY rootfs/ /
+
+RUN echo "*** Backup OpenLiteSpeed Configs ***" \
+  && mkdir -p  /usr/local/lsws/default-config/admin \
+  && cp -rf  /usr/local/lsws/conf/* /usr/local/lsws/default-config \
+  && cp -rf  /usr/local/lsws/admin/conf/* /usr/local/lsws/default-config/admin
 
 WORKDIR /var/www/vhosts/localhost/
 
