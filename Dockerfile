@@ -67,9 +67,9 @@ RUN echo "**** Default to PHP7.4 and create symbolic links ****" \
   && rm -rf /etc/php \
   && rm -f /usr/bin/php \
   && rm -f /usr/local/lsws/fcgi-bin/lsphp \
-  && ln -s /usr/local/lsws/lsphp74/etc/php/7.4/ /etc/php \
-  && ln -s /usr/local/lsws/lsphp74/bin/php /usr/bin/php \
-  && ln -s /usr/local/lsws/lsphp74/bin/php /usr/local/lsws/fcgi-bin/lsphp
+  && ln /usr/local/lsws/lsphp74/etc/php/7.4/ /etc/php \
+  && ln /usr/local/lsws/lsphp74/bin/php /usr/bin/php \
+  && ln /usr/local/lsws/lsphp74/bin/php /usr/local/lsws/fcgi-bin/lsphp
 
 # When using Composer, disable the warning about running commands as root/super user
 ENV COMPOSER_ALLOW_SUPERUSER=1
