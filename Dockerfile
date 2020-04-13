@@ -9,6 +9,7 @@ RUN echo "**** Create symbolic links for /etc/php****" \
   && rm -rf /etc/php \
   && mkdir -p /etc/php \
   && rm -rf /etc/php /usr/local/lsws/lsphp74/etc/php/7.4 \
+  && mkdir -p /etc/php /usr/local/lsws/lsphp74/etc/php \
   && ln -s /etc/php /usr/local/lsws/lsphp74/etc/php/7.4
 
 # RUN echo "**** Install PHP7.3 ****" \
