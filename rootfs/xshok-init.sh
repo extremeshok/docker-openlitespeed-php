@@ -159,7 +159,7 @@ fi
 ######  Initialize Configs ######
 # Restore configs if they are missing, ie if a new/empty volume was used to store the configs
 if [ ! -f  "/etc/openlitespeed/httpd_config.conf" ] || [ ! -f  "/etc/openlitespeed/admin/admin_config.conf" ] ; then
-  cp -rf /usr/local/lsws/default-config/* /etc/openlitespeed/
+  cp -rf /usr/local/lsws/default/* /etc/openlitespeed/
 fi
 
 ###### LAUNCH LITESPEEED SERVER ######

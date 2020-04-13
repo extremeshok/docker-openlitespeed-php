@@ -97,9 +97,9 @@ RUN echo "**** Install WP-CLI ****" \
 COPY rootfs/ /
 
 RUN echo "*** Backup OpenLiteSpeed Configs ***" \
-  && mkdir -p  /usr/local/lsws/default-config/admin \
-  && cp -rf  /usr/local/lsws/conf/* /usr/local/lsws/default-config \
-  && cp -rf  /usr/local/lsws/admin/conf/* /usr/local/lsws/default-config/admin
+  && mkdir -p  /usr/local/lsws/default/admin \
+  && cp -rf  /usr/local/lsws/conf/* /usr/local/lsws/default \
+  && cp -rf  /usr/local/lsws/admin/conf/* /usr/local/lsws/default/admin
 
 WORKDIR /var/www/vhosts/localhost/
 
