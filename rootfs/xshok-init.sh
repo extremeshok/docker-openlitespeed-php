@@ -156,6 +156,13 @@ if [ ! -f "/etc/cron.d/*" ] ; then
   cat /etc/cron.d/* | crontab -u nobody -
 fi
 
+###### Fix vhost permissions ######
+if [ -d "/var/www/vhosts" ] ; then
+  echo "Fixing vhost permissions"
+  chmod 777 /var/www/vhosts
+  chmod 777 /var/www/vhosts/*
+fi
+
 ######  Initialize Configs ######
 # Restore configs if they are missing, ie if a new/empty volume was used to store the configs
 if [ ! -f  "/etc/openlitespeed/httpd_config.conf" ] || [ ! -f  "/etc/openlitespeed/admin/admin_config.conf" ] ; then
