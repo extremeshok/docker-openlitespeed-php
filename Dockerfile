@@ -9,7 +9,7 @@ RUN echo "**** Create symbolic links for /etc/php****" \
   && rm -rf /etc/php \
   && mkdir -p /etc/php \
   && rm -rf /etc/php /usr/local/lsws/lsphp74/etc/php/7.4 \
-  && mkdir -p /etc/php /usr/local/lsws/lsphp74/etc/php \
+  && mkdir -p /usr/local/lsws/lsphp74/etc/php \
   && ln -s /etc/php /usr/local/lsws/lsphp74/etc/php/7.4
 
 # RUN echo "**** Install PHP7.3 ****" \
@@ -96,11 +96,6 @@ RUN echo "**** Install WP-CLI ****" \
     && mv wp-cli.phar /usr/local/bin/wp-cli
 
 COPY rootfs/ /
-
-RUN echo "*** Backup OpenLiteSpeed Configs ***" \
-  && mkdir -p  /usr/local/lsws/default/admin \
-  && cp -rf  /usr/local/lsws/conf/* /usr/local/lsws/default \
-  && cp -rf  /usr/local/lsws/admin/conf/* /usr/local/lsws/default/admin
 
 WORKDIR /var/www/vhosts/localhost/
 
