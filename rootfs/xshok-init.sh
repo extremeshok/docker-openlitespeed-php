@@ -156,18 +156,35 @@ if [ ! -f "/etc/cron.d/*" ] ; then
   cat /etc/cron.d/* | crontab -u nobody -
 fi
 
-###### Fix vhost permissions ######
-if [ -d "/var/www/vhosts" ] ; then
-  echo "Fixing vhost permissions"
-  chmod 777 /var/www/vhosts
-  chmod 777 /var/www/vhosts/*
-fi
-
 ######  Initialize Configs ######
 # Restore configs if they are missing, ie if a new/empty volume was used to store the configs
 if [ ! -f  "/etc/openlitespeed/conf/httpd_config.conf" ] || [ ! -f  "/etc/openlitespeed/admin/admin_config.conf" ] ; then
   cp -rf /usr/local/lsws/default/conf/* /etc/openlitespeed/conf/
   cp -rf /usr/local/lsws/default/admin/* /etc/openlitespeed/admin/
+fi
+# Restore localhost if missing, ie if a new/empty volume was used to store the www/vhost
+if [ ! -d  "/var/www/vhosts/localhost/" ] ; then
+  mkdir -p /var/www/vhosts/localhost/
+  cp -rf /usr/local/lsws/default/localhost/* /var/www/vhosts/localhost/
+fi
+
+if [ ! -f  "/var/www/vhosts/localhost/certs/privkey.pem" ] || [ ! -f  "/var/www/vhosts/localhost/certs/fullchain.pem" ] ; then
+  echo "Generating default certificate and key for localhost"
+openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes keyout privkey.pem -out fullchain.pem -extensions san -config \
+<(echo "[req]";
+  echo "distinguished_name=req";
+  echo "[san]";
+  echo "subjectAltName=DNS:localhost,DNS:$(hostname -f)"
+  ) \
+-subj "/CN=localhost"
+fi
+
+###### Fix vhost permissions ######
+if [ -d "/var/www/vhosts" ] ; then
+  echo "Fixing vhost permissions"
+  chmod 777 /var/www/vhosts
+  chmod 777 /var/www/vhosts/*
+  chmod -R 640 /var/www/vhosts/*/certs/
 fi
 
 ###### LAUNCH LITESPEEED SERVER ######
