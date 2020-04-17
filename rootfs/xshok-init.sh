@@ -170,14 +170,9 @@ fi
 
 if [ ! -f  "/var/www/vhosts/localhost/certs/privkey.pem" ] || [ ! -f  "/var/www/vhosts/localhost/certs/fullchain.pem" ] ; then
   echo "Generating default certificate and key for localhost"
-  openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes keyout /var/www/vhosts/localhost/certs/privkey.pem -out /var/www/vhosts/localhost/certs/fullchain.pem -extensions san -config \
-<(echo "[req]";
-  echo "distinguished_name=req";
-  echo "[san]";
-  echo "subjectAltName=DNS:localhost,DNS:$(hostname -f)"
-  ) \
--subj "/CN=localhost"
+  openssl req -new -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -out /var/www/vhosts/localhost/certs/fullchain.pem -keyout  /var/www/vhosts/localhost/certs/privkey.pem -subj "/C=RO/ST=Bucharest/L=Bucharest/O=IT/CN=localhost"
 fi
+
 
 ###### Fix vhost permissions ######
 if [ -d "/var/www/vhosts" ] ; then
