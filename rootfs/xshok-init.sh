@@ -170,7 +170,7 @@ fi
 
 if [ ! -f  "/var/www/vhosts/localhost/certs/privkey.pem" ] || [ ! -f  "/var/www/vhosts/localhost/certs/fullchain.pem" ] ; then
   echo "Generating default certificate and key for localhost"
-openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes keyout privkey.pem -out fullchain.pem -extensions san -config \
+  openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes keyout /var/www/vhosts/localhost/certs/privkey.pem -out /var/www/vhosts/localhost/certs/fullchain.pem -extensions san -config \
 <(echo "[req]";
   echo "distinguished_name=req";
   echo "[san]";

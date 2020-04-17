@@ -78,6 +78,7 @@ Place files in **/var/www/vhosts/fqdn.com/** , see example **/var/www/vhosts/loc
 * 443 : httpS
 * 443/udp : quic aka http/2
 * 7080 : webadmin
+* 8088 : example
 
 # Default WebAdmin Login
 * https://127.0.0.1:7080
