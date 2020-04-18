@@ -83,7 +83,7 @@ Place files in **/var/www/vhosts/fqdn.com/** , see example **/var/www/vhosts/loc
 # Default WebAdmin Login
 * https://127.0.0.1:7080
 * user: admin
-* password: password
+* Password: please use the password set below
 
 # To set your own password
 replace container name with the container name, eg xs_openlitespeed-_1

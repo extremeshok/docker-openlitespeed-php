@@ -162,6 +162,12 @@ if [ ! -f  "/etc/openlitespeed/conf/httpd_config.conf" ] || [ ! -f  "/etc/openli
   cp -rf /usr/local/lsws/default/conf/* /etc/openlitespeed/conf/
   cp -rf /usr/local/lsws/default/admin/* /etc/openlitespeed/admin/
 fi
+
+# generate a random admin password, if one is not defined
+if [ ! -f  "/etc/openlitespeed/admin/htpasswd" ] ; then
+  echo "admin: $(/usr/local/lsws/admin/fcgi-bin/admin_php* -q /usr/local/lsws/admin/misc/htpasswd.php '$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)') " > /etc/openlitespeed/admin/htpasswd
+fi
+
 # Restore localhost if missing, ie if a new/empty volume was used to store the www/vhost
 if [ ! -d  "/var/www/vhosts/localhost/" ] ; then
   mkdir -p /var/www/vhosts/localhost/
