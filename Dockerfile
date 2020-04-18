@@ -97,6 +97,9 @@ RUN echo "**** Install WP-CLI ****" \
 
 COPY rootfs/ /
 
+RUN echo "**** Ensure there is no admin password ****" \
+  && rm -f /etc/openlitespeed/admin/htpasswd
+
 WORKDIR /var/www/vhosts/localhost/
 
 EXPOSE 80 443 443/udp 7080 8088
