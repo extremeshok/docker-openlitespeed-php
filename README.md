@@ -15,6 +15,7 @@
 * errorlog = stderr
 * configs located in /etc/openlitespeed/
 * php configs located in /etc/php/
+* logs located in /user/local/lsws/logs/
 * default configs will be added if the config dir is empty
 * OWASP modsecurity rules enabled
 * Restart openlitespeed when changes to the vhost/domain.com/cert dirs are detected, ie ssl certificate is updated
@@ -53,7 +54,7 @@
 * uploadprogress
 
 # Included PHP Modules
-* apc
+* apcu
 * curl
 * dev
 * igbinary

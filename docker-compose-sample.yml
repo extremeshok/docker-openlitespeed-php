@@ -11,6 +11,7 @@ services:
         # volume mounts
         - vol-www-vhosts:/var/www/vhosts/:rw
         - vol-www-configs:/etc/openlitespeed/:rw
+        - vol-www-logs:/usr/local/lsws/logs/:rw
       environment:
       #optional enviromental varibles
         - TZ=${TZ}
