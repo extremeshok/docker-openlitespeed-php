@@ -7,6 +7,8 @@
 ## enable case insensitve matching
 shopt -s nocaseglob
 
+sleeeep 99999
+
 ###### DEFAULTS ######
 PHP_INI="/etc/php/litespeed/php.ini"
 ADDITIONAL_PHP_INI="/etc/php/mods-available/"
