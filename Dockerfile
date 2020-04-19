@@ -79,6 +79,10 @@ RUN echo "**** Create symbolic links for /etc/php****" \
   && ln -s /etc/php/litespeed /usr/local/lsws/lsphp74/etc/php/7.4/litespeed \
   && ln -s /etc/php/mods-available /usr/local/lsws/lsphp74/etc/php/7.4/mods-available
 
+RUN echo "**** Create error.log for php****" \
+  && touch /usr/local/lsws/logs/php_errors.log \
+  && chown nouser:nogroup /usr/local/lsws/logs/php_error.log
+
 COPY rootfs/ /
 
 RUN echo "*** Backup PHP Configs ***" \
