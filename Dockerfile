@@ -81,7 +81,7 @@ RUN echo "**** Create symbolic links for /etc/php****" \
 
 RUN echo "**** Create error.log for php****" \
   && touch /usr/local/lsws/logs/php_errors.log \
-  && chown nouser:nogroup /usr/local/lsws/logs/php_error.log
+  && chown nobody:nogroup /usr/local/lsws/logs/php_error.log
 
 COPY rootfs/ /
 
