@@ -5,13 +5,6 @@ USER root
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN echo "**** Create symbolic links for /etc/php****" \
-  && rm -rf /etc/php \
-  && mkdir -p /etc/php \
-  && rm -rf /etc/php /usr/local/lsws/lsphp74/etc/php/7.4 \
-  && mkdir -p /usr/local/lsws/lsphp74/etc/php \
-  && ln -s /etc/php /usr/local/lsws/lsphp74/etc/php/7.4
-
 # RUN echo "**** Install PHP7.3 ****" \
 #   && apt-install \
 #   lsphp73-apcu- \
@@ -75,6 +68,19 @@ RUN echo "**** Default to PHP7.4 and create symbolic links ****" \
   && rm -f /usr/local/lsws/fcgi-bin/lsphp \
   && ln -s /usr/local/lsws/lsphp74/bin/php /usr/bin/php \
   && ln -s /usr/local/lsws/lsphp74/bin/php /usr/local/lsws/fcgi-bin/lsphp
+
+RUN echo "**** Create symbolic links for /etc/php****" \
+  && rm -rf /etc/php \
+  && mkdir -p /etc/php \
+  && rm -rf /etc/php /usr/local/lsws/lsphp74/etc/php/7.4 \
+  && mkdir -p /usr/local/lsws/lsphp74/etc/php/7.4/litespeed \
+  && mkdir -p /usr/local/lsws/lsphp74/etc/php/7.4/mods-available \
+  && ln -s /etc/php/litespeed /usr/local/lsws/lsphp74/etc/php/7.4/litespeed \
+  && ln -s /etc/php/mods-available /usr/local/lsws/lsphp74/etc/php/7.4/mods-available
+
+RUN echo "*** Backup PHP Configs ***" \
+  && mkdir -p  /usr/local/lsws/default/php \
+  && cp -rf  /usr/local/lsws/lsphp74/etc/php/7.4/* /usr/local/lsws/default/php
 
 # When using Composer, disable the warning about running commands as root/super user
 ENV COMPOSER_ALLOW_SUPERUSER=1
