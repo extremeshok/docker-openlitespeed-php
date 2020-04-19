@@ -43,7 +43,6 @@ RUN echo "**** Install PHP7.4 ****" \
   lsphp74-imagick  \
   lsphp74-imap \
   lsphp74-intl- \
-  #lsphp74-ioncube \ #not available
   lsphp74-json \
   lsphp74-ldap- \
   lsphp74-memcached \
@@ -60,6 +59,9 @@ RUN echo "**** Install PHP7.4 ****" \
   lsphp74-sybase- \
   lsphp74-tidy-
 
+#not available for php7.4
+# lsphp74-ioncube
+
 RUN echo "**** MSMTP ****" \
   && apt-install msmtp
 
@@ -71,10 +73,9 @@ RUN echo "**** Default to PHP7.4 and create symbolic links ****" \
 
 RUN echo "**** Create symbolic links for /etc/php****" \
   && rm -rf /etc/php \
-  && rm -rf /usr/local/lsws/lsphp74/etc/php/7.4 \
   && mkdir -p /etc/php \
-  && mkdir -p /usr/local/lsws/lsphp74/etc/php/7.4/litespeed \
-  && mkdir -p /usr/local/lsws/lsphp74/etc/php/7.4/mods-available \
+  && rm -rf /usr/local/lsws/lsphp74/etc/php/7.4 \
+  && mkdir -p /usr/local/lsws/lsphp74/etc/php/7.4 \
   && ln -s /etc/php/litespeed /usr/local/lsws/lsphp74/etc/php/7.4/litespeed \
   && ln -s /etc/php/mods-available /usr/local/lsws/lsphp74/etc/php/7.4/mods-available
 
@@ -87,21 +88,21 @@ RUN echo "*** Backup PHP Configs ***" \
 # When using Composer, disable the warning about running commands as root/super user
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-# RUN echo "**** Install Composer ****" \
-#     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-#     && php composer-setup.php \
-#     && mv composer.phar /usr/local/bin/composer \
-#     && php -r "unlink('composer-setup.php');"
-#
-# RUN echo "**** Install PHPUnit ****" \
-#     && wget -q https://phar.phpunit.de/phpunit.phar \
-#     && chmod +x phpunit.phar \
-#     && mv phpunit.phar /usr/local/bin/phpunit
-#
-# RUN echo "**** Install WP-CLI ****" \
-#     && wget -q https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-#     && chmod +x wp-cli.phar \
-#     && mv wp-cli.phar /usr/local/bin/wp-cli
+RUN echo "**** Install Composer ****" \
+    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php \
+    && mv composer.phar /usr/local/bin/composer \
+    && php -r "unlink('composer-setup.php');"
+
+RUN echo "**** Install PHPUnit ****" \
+    && wget -q https://phar.phpunit.de/phpunit.phar \
+    && chmod +x phpunit.phar \
+    && mv phpunit.phar /usr/local/bin/phpunit
+
+RUN echo "**** Install WP-CLI ****" \
+    && wget -q https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+    && chmod +x wp-cli.phar \
+    && mv wp-cli.phar /usr/local/bin/wp-cli
 
 RUN echo "**** Ensure there is no admin password ****" \
   && rm -f /etc/openlitespeed/admin/htpasswd
