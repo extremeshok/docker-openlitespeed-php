@@ -37,12 +37,17 @@ XS_SMTP_PORT=${PHP_SMTP_PORT:-587}
 XS_SMTP_USER=${PHP_SMTP_USER:-}
 XS_SMTP_PASSWORD=${PHP_SMTP_PASSWORD:-}
 
-
 ###### ECC ######
 
 if [[ $XS_MEMORY_LIMIT -lt 64 ]] ; then
   echo "WARNING: XS_MEMORY_LIMIT if ${XS_MEMORY_LIMIT} too low, setting to 128"
   XS_MEMORY_LIMIT=128
+fi
+
+######  Initialize Configs ######
+# Restore configs if they are missing, ie if a new/empty volume was used to store the configs
+if [ ! -f  "$PHP_INI" ] ] ; then
+  cp -rf /usr/local/lsws/default/php/* /etc/php/
 fi
 
 ###### MSMTP ######

@@ -71,8 +71,8 @@ RUN echo "**** Default to PHP7.4 and create symbolic links ****" \
 
 RUN echo "**** Create symbolic links for /etc/php****" \
   && rm -rf /etc/php \
+  && rm -rf /usr/local/lsws/lsphp74/etc/php/7.4 \
   && mkdir -p /etc/php \
-  && rm -rf /etc/php /usr/local/lsws/lsphp74/etc/php/7.4 \
   && mkdir -p /usr/local/lsws/lsphp74/etc/php/7.4/litespeed \
   && mkdir -p /usr/local/lsws/lsphp74/etc/php/7.4/mods-available \
   && ln -s /etc/php/litespeed /usr/local/lsws/lsphp74/etc/php/7.4/litespeed \
