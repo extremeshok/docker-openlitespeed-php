@@ -78,10 +78,6 @@ RUN echo "**** Create symbolic links for /etc/php****" \
   && ln -s /etc/php/litespeed /usr/local/lsws/lsphp74/etc/php/7.4/litespeed \
   && ln -s /etc/php/mods-available /usr/local/lsws/lsphp74/etc/php/7.4/mods-available
 
-RUN echo "*** Backup PHP Configs ***" \
-  && mkdir -p  /usr/local/lsws/default/php \
-  && cp -rf  /usr/local/lsws/lsphp74/etc/php/7.4/* /usr/local/lsws/default/php
-
 # When using Composer, disable the warning about running commands as root/super user
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
@@ -102,6 +98,11 @@ RUN echo "**** Install WP-CLI ****" \
     && mv wp-cli.phar /usr/local/bin/wp-cli
 
 COPY rootfs/ /
+
+RUN echo "*** Backup PHP Configs ***" \
+  && mkdir -p  /usr/local/lsws/default/php \
+  && cp -rf  /usr/local/lsws/lsphp74/etc/php/7.4/* /usr/local/lsws/default/php
+
 
 RUN echo "**** Ensure there is no admin password ****" \
   && rm -f /etc/openlitespeed/admin/htpasswd
