@@ -42,7 +42,7 @@ RUN echo "**** Install PHP7.4 ****" \
   lsphp74-igbinary \
   lsphp74-imagick  \
   lsphp74-imap \
-  lsphp74-intl- \
+  lsphp74-intl \
   lsphp74-json \
   lsphp74-ldap- \
   lsphp74-memcached \
