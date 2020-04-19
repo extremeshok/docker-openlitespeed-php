@@ -35,7 +35,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN echo "**** Install PHP7.4 ****" \
   && apt-install \
-  lsphp74-apcu- \
+  lsphp74-apcu \
   lsphp74-common \
   lsphp74-curl \
   lsphp74-dev \

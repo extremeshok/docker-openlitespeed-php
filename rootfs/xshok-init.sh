@@ -136,12 +136,12 @@ EOF
 fi
 
 echo "#### Checking PHP Binaries ####"
-if ! /usr/local/lsws/fcgi-bin/lsphp -v | head -n 1 | grep -q "(litespeed)" ; then
+if ! /usr/local/lsws/fcgi-bin/lsphp -v | grep -q "(litespeed)" ; then
   echo "ERROR: /usr/local/lsws/fcgi-bin/lsphp is not a (litespeed) binary, sleeping ......"
   sleep 1d
   exit 1
 fi
-if ! /usr/bin/php -v | head -n 1 | grep -q "(cli)" ; then
+if ! /usr/bin/php -v | grep -q "(cli)" ; then
   echo "ERROR: /usr/bin/php is not a (cli) binary, sleeping ......"
   sleep 1d
   exit 1
