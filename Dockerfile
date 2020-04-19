@@ -87,21 +87,21 @@ RUN echo "*** Backup PHP Configs ***" \
 # When using Composer, disable the warning about running commands as root/super user
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-RUN echo "**** Install Composer ****" \
-    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php composer-setup.php \
-    && mv composer.phar /usr/local/bin/composer \
-    && php -r "unlink('composer-setup.php');"
-
-RUN echo "**** Install PHPUnit ****" \
-    && wget -q https://phar.phpunit.de/phpunit.phar \
-    && chmod +x phpunit.phar \
-    && mv phpunit.phar /usr/local/bin/phpunit
-
-RUN echo "**** Install WP-CLI ****" \
-    && wget -q https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-    && chmod +x wp-cli.phar \
-    && mv wp-cli.phar /usr/local/bin/wp-cli
+# RUN echo "**** Install Composer ****" \
+#     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+#     && php composer-setup.php \
+#     && mv composer.phar /usr/local/bin/composer \
+#     && php -r "unlink('composer-setup.php');"
+#
+# RUN echo "**** Install PHPUnit ****" \
+#     && wget -q https://phar.phpunit.de/phpunit.phar \
+#     && chmod +x phpunit.phar \
+#     && mv phpunit.phar /usr/local/bin/phpunit
+#
+# RUN echo "**** Install WP-CLI ****" \
+#     && wget -q https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+#     && chmod +x wp-cli.phar \
+#     && mv wp-cli.phar /usr/local/bin/wp-cli
 
 RUN echo "**** Ensure there is no admin password ****" \
   && rm -f /etc/openlitespeed/admin/htpasswd
