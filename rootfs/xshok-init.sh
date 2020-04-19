@@ -46,7 +46,7 @@ fi
 
 ######  Initialize Configs ######
 # Restore configs if they are missing, ie if a new/empty volume was used to store the configs
-if [ ! -f  "$PHP_INI" ] ] ; then
+if [ ! -f  "$PHP_INI"  ] ; then
   cp -rf /usr/local/lsws/default/php/* /etc/php/
 fi
 
