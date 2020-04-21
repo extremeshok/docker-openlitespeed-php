@@ -92,6 +92,9 @@ RUN echo "*** Backup PHP Configs ***" \
   && mkdir -p  /usr/local/lsws/default/php \
   && cp -rf  /usr/local/lsws/lsphp74/etc/php/7.4/* /usr/local/lsws/default/php
 
+RUN echo "*** Show php version information ***" \
+  && /usr/bin/php -v
+
 # When using Composer, disable the warning about running commands as root/super user
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
