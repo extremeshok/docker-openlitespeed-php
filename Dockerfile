@@ -65,13 +65,7 @@ RUN echo "**** Install PHP7.4 ****" \
 RUN echo "**** MSMTP ****" \
   && apt-install msmtp
 
-RUN echo "**** Default to PHP7.4 and create symbolic links ****" \
-  && rm -f /usr/bin/php \
-  && rm -f /usr/local/lsws/fcgi-bin/lsphp \
-  && ln -s /usr/local/lsws/lsphp74/bin/php /usr/bin/php \
-  && ln -s /usr/local/lsws/lsphp74/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp
-
-RUN echo "**** Create symbolic links for /etc/php****" \
+RUN echo "**** Create symbolic links for /etc/php ****" \
   && rm -rf /etc/php \
   && mkdir -p /etc/php \
   && rm -rf /usr/local/lsws/lsphp74/etc/php/7.4 \
@@ -92,9 +86,6 @@ RUN echo "*** Backup PHP Configs ***" \
   && mkdir -p  /usr/local/lsws/default/php \
   && cp -rf  /usr/local/lsws/lsphp74/etc/php/7.4/* /usr/local/lsws/default/php
 
-RUN echo "*** Show php version information ***" \
-  && /usr/bin/php -v
-
 # When using Composer, disable the warning about running commands as root/super user
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
@@ -113,6 +104,12 @@ RUN echo "**** Install WP-CLI ****" \
     && wget -q https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp-cli
+
+RUN echo "**** Default to PHP7.4 and create symbolic links ****" \
+  && rm -f /usr/bin/php \
+  && rm -f /usr/local/lsws/fcgi-bin/lsphp \
+  && ln -s /usr/local/lsws/lsphp74/bin/php /usr/bin/php \
+  && ln -s /usr/local/lsws/lsphp74/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp
 
 RUN echo "**** Ensure there is no admin password ****" \
   && rm -f /etc/openlitespeed/admin/htpasswd
