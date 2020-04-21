@@ -92,14 +92,14 @@ RUN echo "*** Backup PHP Configs ***" \
   && mkdir -p  /usr/local/lsws/default/php \
   && cp -rf  /usr/local/lsws/lsphp74/etc/php/7.4/* /usr/local/lsws/default/php
 
-# When using Composer, disable the warning about running commands as root/super user
-# ENV COMPOSER_ALLOW_SUPERUSER=1
-#
-# RUN echo "**** Install Composer ****" \
-#     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-#     && php composer-setup.php \
-#     && mv composer.phar /usr/local/bin/composer \
-#     && php -r "unlink('composer-setup.php');"
+#When using Composer, disable the warning about running commands as root/super user
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+RUN echo "**** Install Composer ****" \
+    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php \
+    && mv composer.phar /usr/local/bin/composer \
+    && php -r "unlink('composer-setup.php');"
 
 RUN echo "**** Install PHPUnit ****" \
     && wget -q https://phar.phpunit.de/phpunit.phar \
