@@ -62,6 +62,12 @@ RUN echo "**** Install PHP7.4 ****" \
 ## not available for php7.4
 # lsphp74-ioncube
 
+RUN echo "**** Default to PHP7.4 and create symbolic links ****" \
+&& rm -f /usr/bin/php \
+&& rm -f /usr/local/lsws/fcgi-bin/lsphp \
+&& ln -s /usr/local/lsws/lsphp74/bin/php /usr/bin/php \
+&& ln -s /usr/local/lsws/lsphp74/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp
+
 RUN echo "**** MSMTP ****" \
   && apt-install msmtp
 
@@ -87,13 +93,13 @@ RUN echo "*** Backup PHP Configs ***" \
   && cp -rf  /usr/local/lsws/lsphp74/etc/php/7.4/* /usr/local/lsws/default/php
 
 # When using Composer, disable the warning about running commands as root/super user
-ENV COMPOSER_ALLOW_SUPERUSER=1
-
-RUN echo "**** Install Composer ****" \
-    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php composer-setup.php \
-    && mv composer.phar /usr/local/bin/composer \
-    && php -r "unlink('composer-setup.php');"
+# ENV COMPOSER_ALLOW_SUPERUSER=1
+#
+# RUN echo "**** Install Composer ****" \
+#     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+#     && php composer-setup.php \
+#     && mv composer.phar /usr/local/bin/composer \
+#     && php -r "unlink('composer-setup.php');"
 
 RUN echo "**** Install PHPUnit ****" \
     && wget -q https://phar.phpunit.de/phpunit.phar \
@@ -104,12 +110,6 @@ RUN echo "**** Install WP-CLI ****" \
     && wget -q https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp-cli
-
-RUN echo "**** Default to PHP7.4 and create symbolic links ****" \
-  && rm -f /usr/bin/php \
-  && rm -f /usr/local/lsws/fcgi-bin/lsphp \
-  && ln -s /usr/local/lsws/lsphp74/bin/php /usr/bin/php \
-  && ln -s /usr/local/lsws/lsphp74/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp
 
 RUN echo "**** Ensure there is no admin password ****" \
   && rm -f /etc/openlitespeed/admin/htpasswd
