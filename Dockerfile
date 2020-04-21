@@ -90,10 +90,10 @@ RUN echo "*** Backup PHP Configs ***" \
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 RUN echo "**** Install Composer ****" \
-    && /usr/bin/php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && /usr/bin/php composer-setup.php \
+    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php \
     && mv composer.phar /usr/local/bin/composer \
-    && /usr/bin/php -r "unlink('composer-setup.php');"
+    && php -r "unlink('composer-setup.php');"
 
 RUN echo "**** Install PHPUnit ****" \
     && wget -q https://phar.phpunit.de/phpunit.phar \
