@@ -103,13 +103,13 @@ RUN echo "**** Install Composer ****" \
 
 RUN echo "**** Install PHPUnit ****" \
     && wget -q https://phar.phpunit.de/phpunit.phar \
-    && chmod +x phpunit.phar \
-    && mv phpunit.phar /usr/local/bin/phpunit
+    && mv phpunit.phar /usr/local/bin/phpunit \
+    && chmod +x /usr/local/bin/phpunit
 
 RUN echo "**** Install WP-CLI ****" \
     && wget -q https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-    && chmod +x wp-cli.phar \
-    && mv wp-cli.phar /usr/local/bin/wp-cli
+    && mv wp-cli.phar /usr/local/bin/wp-cli \
+    && chmod +x /usr/local/bin/wp-cli
 
 RUN echo "**** Ensure there is no admin password ****" \
   && rm -f /etc/openlitespeed/admin/htpasswd
