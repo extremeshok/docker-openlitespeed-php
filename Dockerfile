@@ -115,8 +115,6 @@ RUN echo "**** Ensure there is no admin password ****" \
   && rm -f /etc/openlitespeed/admin/htpasswd
 
 RUN echo "**** Correct permissions ****" \
-  && chown -R lsadm:lsadm /usr/local/lsws \
-  && chown -R nobody:nogroup /usr/local/lsws/logs/ \
   && chmod +x /etc/cron.hourly/wp-autoupdate
 
 WORKDIR /var/www/vhosts/localhost/
