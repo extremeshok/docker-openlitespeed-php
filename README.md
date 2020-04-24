@@ -26,6 +26,10 @@
 * Expose php disabled
 * msmtp enabled: send email via external smtp server, requires SMTP_HOST, SMTP_USER, SMTP_PASS
 
+# Automation (hourly)
+* find vhost cron files and place them in the /etc/cron.d/ (set CRON_ENABLE to "no" to disable)
+* searches for wordpress installs and update (plugins, themes, core, core-db, wordpress, woocommerce), caches are flushed if there was an update (rewrites, transient, cache, lscache) (Set WP_UPDATE_ENABLE to "no" to disable)
+
 # PHP options (with defaults)
 * PHP_TIMEZONE=UTC
 * PHP_MAX_TIME=180 (in seconds)

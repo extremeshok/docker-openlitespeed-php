@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+echo $(date) >> /tmp/autoupdate
+bash /xshok-wp-autoupdate.sh >> /tmp/autoupdate
