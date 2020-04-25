@@ -15,6 +15,9 @@ services:
       environment:
       #optional enviromental varibles
         - TZ=${TZ}
+        - VHOST_CRON_ENABLE=true
+        - WP_AUTOUPDATE_ENABLE=true
+        - WP_AUTOUPDATE_DEBUG=false
         - PHP_TIMEZONE=${TZ}
         - PHP_REDIS_SESSIONS=yes
         - PHP_REDIS_HOST=redis

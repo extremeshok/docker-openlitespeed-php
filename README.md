@@ -26,9 +26,20 @@
 * Expose php disabled
 * msmtp enabled: send email via external smtp server, requires SMTP_HOST, SMTP_USER, SMTP_PASS
 
-# Automation (hourly)
-* find vhost cron files and place them in the /etc/cron.d/ (set CRON_ENABLE to "no" to disable)
-* searches for wordpress installs and update (plugins, themes, core, core-db, wordpress, woocommerce), caches are flushed if there was an update (rewrites, transient, cache, lscache) (Set WP_UPDATE_ENABLE to "no" to disable)
+# VHOST_CRON_ENABLE (disabled by default)
+## generate cron from cron files located in vhost/cron (hourly)
+* set VHOST_CRON_ENABLE to true to enable, disabled by default
+* finds all vhost/cron files and places them in the /etc/cron.d/ , runs hourly
+* Place cron files in **/var/www/vhosts/fqdn.com/cron** , see example **/var/www/vhosts/localhost/cron/example**
+
+# WP_AUTOUPDATE_ENABLE (disabled by default)
+## Automatically update all wordpress installs (hourly)
+searches for wordpress installs located under /var/www/vhost/html
+updates (plugins, themes, core, core-db, wordpress, woocommerce),
+if there is an update caches are flushed (rewrites, transient, cache, lscache)  
+* Set WP_AUTOUPDATE_ENABLE to "no" to disable
+* Set WP_AUTOUPDATE_DEBUG to "yes" to enable debug output
+* To disable a specific wordpress install from Automatic updates, create a blank "autoupdate.disable" file in the wordpress directory (ie. directory which contains wp-config.php)
 
 # PHP options (with defaults)
 * PHP_TIMEZONE=UTC

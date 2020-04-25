@@ -12,6 +12,8 @@ PHP_INI="/etc/php/litespeed/php.ini"
 ADDITIONAL_PHP_INI="/etc/php/mods-available/"
 
 ###### VARIBLES ######
+XS_WP_AUTOUPDATE_ENABLE=${WP_AUTOUPDATE_ENABLE:-no}
+
 XS_REDIS_SESSIONS=${PHP_REDIS_SESSIONS:-no}
 XS_REDIS_HOST=${PHP_REDIS_HOST:-redis}
 XS_REDIS_PORT=${PHP_REDIS_PORT:-6379}
@@ -42,6 +44,11 @@ XS_SMTP_PASSWORD=${PHP_SMTP_PASSWORD:-}
 if [[ $XS_MEMORY_LIMIT -lt 64 ]] ; then
   echo "WARNING: XS_MEMORY_LIMIT if ${XS_MEMORY_LIMIT} too low, setting to 128"
   XS_MEMORY_LIMIT=128
+fi
+if [ "${XS_REDIS_SESSIONS,,}" == "yes" ] || [ "${XS_REDIS_SESSIONS,,}" == "true" ] || [ "${XS_REDIS_SESSIONS,,}" == "on" ] || [ "${XS_REDIS_SESSIONS,,}" == "1" ] ; then
+  XS_REDIS_SESSIONS=true
+else
+  XS_REDIS_SESSIONS=false
 fi
 
 ######  Initialize Configs ######
@@ -96,11 +103,11 @@ if [ -d "$ADDITIONAL_PHP_INI" ] && [ -w "$ADDITIONAL_PHP_INI" ] ; then
     rm -f "${ADDITIONAL_PHP_INI}/xs_msmtp.ini"
   fi
   ## disable functions
-  if [ "$XS_DISABLE_FUNCTIONS" == "no" ] || [ "$XS_DISABLE_FUNCTIONS" == "false" ] || [ "$XS_DISABLE_FUNCTIONS" == "off" ] || [ "$XS_DISABLE_FUNCTIONS" == "0" ] ; then
+  if [ "${XS_DISABLE_FUNCTIONS,,}" == "no" ] || [ "${XS_DISABLE_FUNCTIONS,,}" == "false" ] || [ "${XS_DISABLE_FUNCTIONS,,}" ] || [ "${XS_DISABLE_FUNCTIONS,,}" ] ; then
     echo "" > "${ADDITIONAL_PHP_INI}/xs_disable_functions.conf"
   else
     echo "Disabling functions"
-    echo "php_admin_value[disable_functions] = ${XS_DISABLE_FUNCTIONS}" > "${ADDITIONAL_PHP_INI}/xs_disable_functions.conf"
+    echo "php_admin_value[disable_functions] = ${XS_DISABLE_FUNCTIONS,,}" > "${ADDITIONAL_PHP_INI}/xs_disable_functions.conf"
   fi
   # ioncube
   # if [ "$XS_IONCUBE" == "yes" ] || [ "$XS_IONCUBE" == "true" ] || [ "$XS_IONCUBE" == "on" ] || [ "$XS_IONCUBE" == "1" ] ; then
@@ -110,7 +117,7 @@ if [ -d "$ADDITIONAL_PHP_INI" ] && [ -w "$ADDITIONAL_PHP_INI" ] ; then
   #   rm -f "${ADDITIONAL_PHP_INI}/000000_ioncube.ini"
   # fi
   # Redis sessions
-  if [ "$XS_REDIS_SESSIONS" == "yes" ] || [ "$XS_REDIS_SESSIONS" == "true" ] || [ "$XS_REDIS_SESSIONS" == "on" ] || [ "$XS_REDIS_SESSIONS" == "1" ] ; then
+  if [ $XS_REDIS_SESSIONS ] ; then
     echo "Enabling redis sessions"
     cat << EOF > "${ADDITIONAL_PHP_INI}/xs_redis.ini"
 session.save_handler = redis
@@ -156,8 +163,19 @@ if [ "$result" != "0" ] ; then
   exit 1
 fi
 
+##### wp-autoupdate
+if [ "${XS_WP_AUTOUPDATE_ENABLE,,}" == "yes" ] || [ "${XS_WP_AUTOUPDATE_ENABLE,,}" == "true" ] || [ "${XS_WP_AUTOUPDATE_ENABLE,,}" == "on" ] || [ "${XS_WP_AUTOUPDATE_ENABLE,,}" == "1" ] ; then
+  if [ ! -f "/etc/cron.hourly/generate-vhost-cron" ] ; then
+    echo "#!/usr/bin/env bash" > /etc/cron.hourly/wp-autoupdate
+    echo "bash /xshok-wp-autoupdate.sh >> /tmp/autoupdate" >> /etc/cron.hourly/wp-autoupdate
+    chmod +x /etc/cron.hourly/wp-autoupdate
+  fi
+else
+  rm -f "/etc/cron.hourly/wp-autoupdate"
+fi
+
 ###### WAIT FOR REDIS SERVER ######
-if [ "$XS_REDIS_SESSIONS" == "yes" ] || [ "$XS_REDIS_SESSIONS" == "true" ] || [ "$XS_REDIS_SESSIONS" == "on" ] || [ "$XS_REDIS_SESSIONS" == "1" ] ; then
+if [ $XS_REDIS_SESSIONS ] ; then
   # wait for redis to start
   echo "waiting for redis ${XS_REDIS_HOST}:${XS_REDIS_PORT}"
   while ! echo PING | nc -q 10  ${XS_REDIS_HOST} ${XS_REDIS_PORT} ; do

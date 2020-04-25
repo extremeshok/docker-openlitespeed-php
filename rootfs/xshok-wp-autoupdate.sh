@@ -9,88 +9,104 @@
 #
 # caches are flushed if there was an update (rewrites, transient, cache, lscache)
 #
-# Set WP_UPDATE_ENABLE to "no" to disable
+# Set WP_AUTOUPDATE_ENABLE to "no" to disable
+# Set WP_AUTOUPDATE_DEBUG to "yes" to enable debug output of the wp-cli commands
+#
 #
 #################################################################################
 
-XS_WP_UPDATE_ENABLE=${WP_UPDATE_ENABLE:-yes}
-
+################# DEFAULTS
 VHOST_DIR="/var/www/vhosts"
 
-if [ "$XS_WP_UPDATE_ENABLE" == "yes" ] || [ "$XS_WP_UPDATE_ENABLE" == "true" ] || [ "$XS_WP_UPDATE_ENABLE" == "on" ] || [ "$XS_WP_UPDATE_ENABLE" == "1" ] ; then
-  if [ -d "${VHOST_DIR}" ] ; then
-    while IFS= read -r wp_path ; do
-      updated=""
-      echo "Processing: ${wp_path}"
-      if [[ "$wp_path" == *"/html"* ]] ; then
-        # path contains /html , remeber files are always located under vhost/html
-        if wp-cli --allow-root --path="${wp_path}" core is-installed ; then
-          echo " Valid wordpress"
+################# ECC
+XS_WP_AUTOUPDATE_DEBUG=${WP_AUTOUPDATE_DEBUG:-no}
+if [ "${XS_WP_AUTOUPDATE_DEBUG,,}" == "yes" ] || [ "${XS_WP_AUTOUPDATE_DEBUG,,}" == "true" ] || [ "${XS_WP_AUTOUPDATE_DEBUG,,}" == "on" ] || [ "${XS_WP_AUTOUPDATE_DEBUG,,}" == "1" ] ; then
+  XS_WP_AUTOUPDATE_DEBUG=true
+else
+  XS_WP_AUTOUPDATE_DEBUG=false
+fi
 
-          echo "   plugin"
-          result=$(wp-cli --allow-root --path="${wp_path}" plugin update --all 2>&1)
-          result=${result##*$'\n'}
-          if [[ "${result,,}" != *"no plugins updated"* ]] ; then
-                echo "PLUGIN/s UPDATED"
-                updated="plugin"
+################# MAIN
+if [ -d "${VHOST_DIR}" ] ; then
+  while IFS= read -r wp_path ; do
+    updated=""
+    echo "Processing: ${wp_path}"
+    if [ ! -f  "${wp_path}/autoupdate.disable" ] ; then
+      # path contains /html , remeber files are always located under vhost/html
+      if wp-cli --allow-root --path="${wp_path}" core is-installed ; then
+        echo "- Valid wordpress"
+
+        echo "-- plugin"
+        result=$(wp-cli --allow-root --path="${wp_path}" plugin update --all 2>&1)
+        result_short=${result##*$'\n'}
+        if [[ "${result_short,,}" != *"no plugins updated"* ]] && [[ "${result_short,,}" != *"already updated"* ]]  ; then
+            echo "PLUGIN/s UPDATED"
+            updated="plugin"
+            if [ $XS_WP_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
+        fi
+
+        echo "--  theme"
+        result=$(wp-cli --allow-root --path="${wp_path}" theme update --all 2>&1)
+        result_short=${result##*$'\n'}
+        if [[ "${result_short,,}" != *"no themes updated"* ]] && [[ "${result_short,,}" != *"already updated"* ]] ; then
+            echo "THEME UPDATED!!"
+            updated="theme"
+            if [ $XS_WP_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
+        fi
+
+        echo "-- core and core-db"
+        result=$(wp-cli --allow-root --path="${wp_path}" core update 2>&1 )
+        result_short=${result##*$'\n'}
+        if [[ "${result_short,,}" != *"wordpress is up to date"* ]] ; then
+            result_two=$(wp-cli --allow-root --path="${wp_path}" core update-db 2>&1)
+            echo "CORE UPDATED!!"
+            updated="core"
+            if [ $XS_WP_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
+            if [ $XS_WP_AUTOUPDATE_DEBUG ] ; then echo "$result_two" ; fi
+        fi
+
+        echo "-- woocommerce"
+        result=$(wp-cli --allow-root --path="${wp_path}" wc update 2>&1)
+        result_short=${result##*$'\n'}
+        if [[ "${result_short,,}" != *"no updates required"* ]] && [[ "${result_short,,}" != *"did you mean"* ]] && [[ "${result_short,,}" != *"already updated"* ]] ; then
+            echo "WC UPDATED!!"
+            updated="woocommerce"
+            if [ $XS_WP_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
+        fi
+
+        if [ "$updated" != "" ] ; then
+          echo "- Flushing caches due to update : ${updated}"
+
+          result=$(wp-cli --allow-root --path="${wp_path}" rewrite flush 2>&1)
+          result_short=${result##*$'\n'}
+          if [[ "${result_short,,}" == *"rewrite rules flushed"* ]] ; then
+              echo "-- Rewrite rules flushed"
+              if [ $XS_WP_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
           fi
 
-          echo "   theme"
-          result=$(wp-cli --allow-root --path="${wp_path}" theme update --all 2>&1)
-          result=${result##*$'\n'}
-          if [[ "${result,,}" != *"no themes updated"* ]] ; then
-                echo "THEME UPDATED!!"
-                updated="theme"
+          result=$(wp-cli --allow-root --path="${wp_path}" transient delete --all 2>&1)
+          result_short=${result##*$'\n'}
+          if [[ "${result_short,,}" == *"transients deleted from"* ]] ; then
+              echo "-- All transients deleted"
+              if [ $XS_WP_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
           fi
 
-          echo "   core and core-db"
-          result=$(wp-cli --allow-root --path="${wp_path}" core update 2>&1 )
-          result=${result##*$'\n'}
-          if [[ "${result,,}" != *"wordpress is up to date"* ]] ; then
-              result=$(wp-cli --allow-root --path="${wp_path}" core update-db 2>&1)
-              echo "CORE UPDATED!!"
-              updated="core"
+          result=$(wp-cli --allow-root --path="${wp_path}" cache flush 2>&1)
+          result_short=${result##*$'\n'}
+          if [[ "${result_short,,}" == *"cache was flushed"* ]] ; then
+              echo "-- Cache was flushed"
+              if [ $XS_WP_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
           fi
 
-          echo "   woocommerce"
-          result=$(wp-cli --allow-root --path="${wp_path}" wc update 2>&1)
-          result=${result##*$'\n'}
-          if [[ "${result,,}" != *"no updates required"* ]] && [[ "${result,,}" != *"did you mean"* ]] ; then
-              echo "WC UPDATED!!"
-              updated="woocommerce"
+          result=$(wp-cli --allow-root --path="${wp_path}" lscache-purge all 2>&1)
+          result_short=${result##*$'\n'}
+          if [[ "${result_short,,}" == *"purged all"* ]] ; then
+              echo "-- Purged all lscache"
+              if [ $XS_WP_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
           fi
 
-          if [ "$updated" != "" ] ; then
-            echo "Flushing caches due to update : ${updated}"
-
-            result=$(wp-cli --allow-root --path="${wp_path}" rewrite flush 2>&1)
-            result=${result##*$'\n'}
-            if [[ "${result,,}" == *"rewrite rules flushed"* ]] ; then
-                echo "Rewrite rules flushed"
-            fi
-
-            result=$(wp-cli --allow-root --path="${wp_path}" transient delete --all 2>&1)
-            result=${result##*$'\n'}
-            if [[ "${result,,}" == *"transients deleted from"* ]] ; then
-                echo "All transients deleted"
-            fi
-
-            result=$(wp-cli --allow-root --path="${wp_path}" cache flush 2>&1)
-            result=${result##*$'\n'}
-            if [[ "${result,,}" == *"cache was flushed"* ]] ; then
-                echo "Cache was flushed"
-            fi
-
-            result=$(wp-cli --allow-root --path="${wp_path}" lscache-purge all 2>&1)
-            result=${result##*$'\n'}
-            echo "$result"
-            if [[ "${result,,}" == *"purged all"* ]] ; then
-                echo "Purged all lscache"
-            fi
-
-          fi
         fi
       fi
-    done < <(find "${VHOST_DIR}" -path "*/html/*" -type f -name "wp-config.php" -printf '%h\n' | sort | uniq)  #dirs
-  fi
+    fi
+  done < <(find "${VHOST_DIR}" -path "*/html/*" -type f -name "wp-config.php" -printf '%h\n' | sort | uniq)  #dirs
 fi
