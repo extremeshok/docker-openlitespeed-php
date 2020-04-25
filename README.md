@@ -1,6 +1,10 @@
 # docker-openlitespeed-php
 # eXtremeSHOK.com Docker OpenLiteSpeed with mod_security and pagespeed and PHP 7.4 on Ubuntu 18.04
 
+## Uses the base image extremeshok/openlitespeed : https://hub.docker.com/repository/docker/extremeshok/openlitespeed
+
+## Checkout our optimized production web-server setup based on docker https://github.com/extremeshok/docker-webserver
+
 * Ubuntu 18.04 with S6
 * cron (/etc/cron.d) enabled for scheduling tasks, run as user nobody
 * Optimized OpenLiteSpeed configs
