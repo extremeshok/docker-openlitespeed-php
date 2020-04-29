@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv bash
+################################################################################
+# This is property of eXtremeSHOK.com
+# You are free to use, modify and distribute, however you may not remove this notice.
+# Copyright (c) Adrian Jon Kriel :: admin@extremeshok.com
+################################################################################
+#
+# openlitespeed is unable to directly log to /dev/stdout , so we need to tail the log directly
+# tail every 3 seconds, lowers CPU usage
+#
+exec s6-setuidgid nobody tail -F -n 0 -s 3 /usr/local/lsws/logs/php_error.log

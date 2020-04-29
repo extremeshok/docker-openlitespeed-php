@@ -15,11 +15,10 @@
 * Low memory usage
 * HEALTHCHECK activated
 * Graceful shutdown
-* accesslog = stdout
-* errorlog = stderr
+* tail modsec.log, error.log and php_error.log to stdout
 * configs located in /etc/openlitespeed/
 * php configs located in /etc/php/
-* logs located in /user/local/lsws/logs/
+* logs located in /usr/local/lsws/logs/
 * default configs will be added if the config dir is empty
 * OWASP modsecurity rules enabled
 * Restart openlitespeed when changes to the vhost/domain.com/cert dirs are detected, ie ssl certificate is updated
