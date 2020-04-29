@@ -7,4 +7,4 @@
 #
 # openlitespeed is unable to directly log to /dev/stdout , so we need to tail the log directly
 #
-exec s6-setuidgid nobody tail -F -n 0 /usr/local/lsws/logs/php_error.log
+exec s6-setuidgid nobody touch /usr/local/lsws/logs/php_error.log && echo "php_error.log" >> /usr/local/lsws/logs/php_error.log && tail -F -n 0 /usr/local/lsws/logs/php_error.log
