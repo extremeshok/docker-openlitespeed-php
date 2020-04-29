@@ -6,6 +6,5 @@
 ################################################################################
 #
 # openlitespeed is unable to directly log to /dev/stdout , so we need to tail the log directly
-# tail every 3 seconds, lowers CPU usage
 #
-tail -F -n 0 -s 3 -q /usr/local/lsws/logs/php_error.log
+exec s6-setuidgid nobody tail -F -n 0 /usr/local/lsws/logs/php_error.log
