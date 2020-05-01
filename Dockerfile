@@ -120,7 +120,8 @@ RUN echo "**** Ensure there is no admin password ****" \
   && rm -f /etc/openlitespeed/admin/htpasswd
 
 RUN echo "**** Correct permissions ****" \
-  && chmod +x /etc/cron.hourly/wp-autoupdate
+  && chmod +x /etc/cron.hourly/wp-autoupdate \
+  && chmod +x /etc/services.d/tail-log-php-error/run
 
 WORKDIR /var/www/vhosts/localhost/
 

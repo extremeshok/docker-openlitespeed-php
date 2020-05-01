@@ -104,7 +104,8 @@ if [ -d "${VHOST_DIR}" ] ; then
               echo "-- Purged all lscache"
               if [ $XS_WP_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
           fi
-
+          #fix ownership to prevent issues
+          chown -R nobody:nogroup "${wp_path}"
         fi
       fi
     fi
