@@ -9,4 +9,7 @@
 #
 # find a solution to tail as nobody
 #exec s6-setuidgid nobody touch /usr/local/lsws/logs/php_error.log && echo "php_error.log" >> /usr/local/lsws/logs/php_error.log && tail -F -n 0 /usr/local/lsws/logs/php_error.log
-echo "Monitoring php_error.log" >> /usr/local/lsws/logs/php_error.log && tail -F -n 1 /usr/local/lsws/logs/php_error.log
+
+while true ; do
+  echo "Monitoring php_error.log" >> /usr/local/lsws/logs/php_error.log && tail -F -n 1 /usr/local/lsws/logs/php_error.log
+done
