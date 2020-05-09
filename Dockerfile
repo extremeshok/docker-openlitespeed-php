@@ -15,7 +15,10 @@ RUN echo "**** Install fontconfig ****" \
 
 RUN echo "**** Install PHP7.4 ****" \
   && apt-install \
+  lslphp74 \
   lsphp74-common \
+  lsphp74-json- \
+  lsphp74-opcache- \
   php-pear \
   php7.4-apcu \
   php7.4-common \
