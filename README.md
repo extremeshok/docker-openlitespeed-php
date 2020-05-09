@@ -1,16 +1,18 @@
 # docker-openlitespeed-php
-# eXtremeSHOK.com Docker OpenLiteSpeed with mod_security and pagespeed and PHP 7.4 on Ubuntu 18.04
+# eXtremeSHOK.com Docker OpenLiteSpeed with mod_security and pagespeed and PHP 7.4 on Ubuntu LTS
 
 ## Uses the base image extremeshok/openlitespeed : https://hub.docker.com/repository/docker/extremeshok/openlitespeed
 
 ## Checkout our optimized production web-server setup based on docker https://github.com/extremeshok/docker-webserver
 
-* Ubuntu 18.04 with S6
+* Ubuntu LTS with S6
 * cron (/etc/cron.d) enabled for scheduling tasks, run as user nobody
 * Optimized OpenLiteSpeed configs
 * Optimized PHP configs
 * session, memcached, apc serializer set to igbinary
-* OpenLiteSpeed Repository
+* OpenLiteSpeed installed via github releases
+* OpenLiteSpeed Repository used for lsphp (litespeed-php)
+* Ubuntu Repository for PHP7.4
 * IONICE set to -10
 * Low memory usage
 * HEALTHCHECK activated
@@ -65,10 +67,12 @@ searches for wordpress installs located under /var/www/vhost/fqdn.com/html
 
 # Included Modules:
 * cache
+* mod_js
 * mod_security
 * modgzip
 * modinspector
-* pagespeed
+* modpagespeed
+* modreqparser
 * uploadprogress
 
 # Included PHP Modules
