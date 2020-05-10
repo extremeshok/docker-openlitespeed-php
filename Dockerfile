@@ -16,53 +16,42 @@ RUN echo "**** Install fontconfig ****" \
 RUN echo "**** Install PHP7.4 ****" \
   && apt-install \
   lsphp74 \
-  lsphp74-common \
-  lsphp74-curl \
   lsphp74-dev \
-  lsphp74-imap \
-  lsphp74-intl \
-  lsphp74-json \
-  lsphp74-ldap- \
-  lsphp74-mysql \
-  lsphp74-opcache \
-  lsphp74-pgsql- \
-  lsphp74-pspell- \
-  lsphp74-snmp- \
-  lsphp74-sqlite3 \
-  lsphp74-sybase- \
-  lsphp74-tidy- \
   php-pear \
   php7.4-apcu \
-#php7.4-common \
-#php7.4-curl \
-#php7.4-dev \
+  php7.4-common \
+  php7.4-curl \
   php7.4-igbinary \
   php7.4-imagick  \
-#php7.4-imap \
-#php7.4-intl \
-#php7.4-json \
-#php7.4-ldap- \
+  php7.4-imap \
+  php7.4-intl \
+  php7.4-json \
+  php7.4-ldap- \
   php7.4-memcached \
   php7.4-msgpack \
-#php7.4-mysql \
-#php7.4-opcache \
-#php7.4-pgsql- \
-#php7.4-pspell- \
-  php7.4-redis
-#php7.4-snmp- \
-#php7.4-sqlite3 \
-#php7.4-sybase- \
-#php7.4-tidy-
-
-  #php7.4-modules-source- \
+  php7.4-mysql \
+  php7.4-opcache \
+  php7.4-pgsql- \
+  php7.4-pspell- \
+  php7.4-redis \
+  php7.4-snmp- \
+  php7.4-sqlite3 \
+  php7.4-sybase- \
+  php7.4-tidy-
+#php7.4-dev \
+#php7.4-modules-source- \
 ## not available for php7.4
 # lsphp74-ioncube
 
 RUN echo "**** Default to PHP7.4 and create symbolic links ****" \
-&& rm -f /usr/bin/php \
-&& rm -f /usr/local/lsws/fcgi-bin/lsphp \
-&& ln -s /usr/local/lsws/lsphp74/bin/php /usr/bin/php \
-&& ln -s /usr/local/lsws/lsphp74/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp
+  && rm -f /usr/bin/php \
+  && rm -f /usr/local/lsws/fcgi-bin/lsphp \
+  && ln -s /usr/local/lsws/lsphp74/bin/php /usr/bin/php \
+  && ln -s /usr/local/lsws/lsphp74/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp
+
+RUN echo "**** Create symbolic links for php modules****" \
+  && rm -f /usr/local/lsws/lsphp74/lib/php/20190902 \
+  && ln -s /usr/lib/php/20190902 /usr/local/lsws/lsphp74/lib/php/20190902
 
 RUN echo "**** MSMTP ****" \
   && apt-install msmtp
