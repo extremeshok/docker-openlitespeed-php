@@ -17,6 +17,12 @@ RUN echo "**** Install PHP7.4 ****" \
   && apt-install \
   lsphp74 \
   lsphp74-dev \
+  lsphp74-common \
+  lsphp74-imap \
+  lsphp74-intl \
+  lsphp74-json \
+  lsphp74-mysql \
+  lsphp74-opcache \
   php-pear \
   php7.4-apcu \
   php7.4-common \
@@ -54,7 +60,7 @@ RUN echo "**** Default to PHP7.4 and create symbolic links ****" \
 #   && ln -s /usr/lib/php/20190902 /usr/local/lsws/lsphp74/lib/php/20190902
 
 RUN echo "**** Copy php modules****" \
-  && cp -f /usr/lib/php/20190902/* /usr/local/lsws/lsphp74/lib/php/20190902/
+  && cp -f -n /usr/lib/php/20190902/* /usr/local/lsws/lsphp74/lib/php/20190902/
 
 RUN echo "**** MSMTP ****" \
   && apt-install msmtp
