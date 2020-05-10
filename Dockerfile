@@ -50,7 +50,7 @@ RUN echo "**** Default to PHP7.4 and create symbolic links ****" \
   && ln -s /usr/local/lsws/lsphp74/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp
 
 RUN echo "**** Create symbolic links for php modules****" \
-  && rm -f /usr/local/lsws/lsphp74/lib/php/20190902 \
+  && rm -rf /usr/local/lsws/lsphp74/lib/php/20190902 \
   && ln -s /usr/lib/php/20190902 /usr/local/lsws/lsphp74/lib/php/20190902
 
 RUN echo "**** MSMTP ****" \
