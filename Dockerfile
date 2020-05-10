@@ -76,6 +76,9 @@ RUN echo "**** Create error.log for php ****" \
 
 COPY rootfs/ /
 
+RUN echo "**** Test PHP ****" \
+   && if /usr/local/lsws/lsphp74/bin/php -v | grep -q -i warning ; then /usr/local/lsws/lsphp74/bin/php -v ; exit 1 ; fi
+
 RUN echo "*** Backup PHP Configs ***" \
   && mkdir -p  /usr/local/lsws/default/php \
   && cp -rf  /usr/local/lsws/lsphp74/etc/php/7.4/* /usr/local/lsws/default/php
