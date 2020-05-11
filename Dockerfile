@@ -1,4 +1,4 @@
-FROM extremeshok/openlitespeed:latest AS BUILD
+FROM extremeshok/openlitespeed:20.04 AS BUILD
 LABEL mantainer="Adrian Kriel <admin@extremeshok.com>" vendor="eXtremeSHOK.com"
 ################################################################################
 # This is property of eXtremeSHOK.com
@@ -67,7 +67,7 @@ RUN echo "**** Create error.log for php ****" \
 
 COPY rootfs/ /
 
-RUN echo "**** Test PHP ****" \
+RUN echo "**** Test PHP has no errors ****" \
    && if /usr/local/lsws/lsphp74/bin/php -v | grep -q -i warning ; then /usr/local/lsws/lsphp74/bin/php -v ; exit 1 ; fi
 
 RUN echo "*** Backup PHP Configs ***" \

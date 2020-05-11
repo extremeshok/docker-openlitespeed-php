@@ -1,18 +1,17 @@
 # docker-openlitespeed-php
-# eXtremeSHOK.com Docker OpenLiteSpeed with mod_security and pagespeed and PHP 7.4 on Ubuntu LTS
+# eXtremeSHOK.com Docker OpenLiteSpeed with mod_security and pagespeed and PHP 7.4 on Ubuntu LTS 20.04
 
 ## Uses the base image extremeshok/openlitespeed : https://hub.docker.com/repository/docker/extremeshok/openlitespeed
 
 ## Checkout our optimized production web-server setup based on docker https://github.com/extremeshok/docker-webserver
 
-* Ubuntu LTS with S6
+* Ubuntu LTS 20.04 with S6
 * cron (/etc/cron.d) enabled for scheduling tasks, run as user nobody
 * Optimized OpenLiteSpeed configs
 * Optimized PHP configs
 * session, memcached, apc serializer set to igbinary
-* OpenLiteSpeed installed via github releases
+* OpenLiteSpeed installed via github releases (always newer than the repo)
 * OpenLiteSpeed Repository used for lsphp (litespeed-php)
-* Ubuntu Repository for PHP7.4
 * IONICE set to -10
 * Low memory usage
 * HEALTHCHECK activated
