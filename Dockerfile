@@ -18,7 +18,6 @@ RUN echo "**** MSMTP ****" \
 
 RUN echo "**** Install PHP7.4 ****" \
   && apt-install \
-  lsphp7.4-modules-source- \
   lsphp74-apcu \
   lsphp74-common \
   lsphp74-curl \
