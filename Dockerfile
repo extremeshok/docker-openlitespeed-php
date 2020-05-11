@@ -13,6 +13,9 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN echo "**** Install fontconfig ****" \
   && apt-install fontconfig
 
+RUN echo "**** MSMTP ****" \
+  && apt-install msmtp
+
 RUN echo "**** Install PHP7.4 ****" \
   && apt-install \
   lsphp7.4-modules-source- \
@@ -47,16 +50,6 @@ RUN echo "**** Default to PHP7.4 and create symbolic links ****" \
   && rm -f /usr/local/lsws/fcgi-bin/lsphp \
   && ln -s /usr/local/lsws/lsphp74/bin/php /usr/bin/php \
   && ln -s /usr/local/lsws/lsphp74/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp
-
-# RUN echo "**** Create symbolic links for php modules****" \
-#   && rm -rf /usr/local/lsws/lsphp74/lib/php/20190902 \
-#   && ln -s /usr/lib/php/20190902 /usr/local/lsws/lsphp74/lib/php/20190902
-
-RUN echo "**** Copy php modules****" \
-  && cp -f -n /usr/lib/php/20190902/* /usr/local/lsws/lsphp74/lib/php/20190902/
-
-RUN echo "**** MSMTP ****" \
-  && apt-install msmtp
 
 RUN echo "**** Create symbolic links for /etc/php ****" \
   && rm -rf /etc/php \
@@ -105,7 +98,7 @@ RUN echo "**** Ensure there is no admin password ****" \
   && rm -f /etc/openlitespeed/admin/htpasswd
 
 RUN echo "**** Correct permissions ****" \
-  && chmod +x /etc/cron.hourly/wp-autoupdate \
+  && chmod 0644 /etc/cron.hourly/wp-autoupdate \
   && chmod +x /etc/services.d/tail-log-php-error/run
 
 WORKDIR /var/www/vhosts/localhost/
