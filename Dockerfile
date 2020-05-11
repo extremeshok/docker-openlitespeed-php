@@ -13,44 +13,42 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN echo "**** Install fontconfig ****" \
   && apt-install fontconfig
 
+RUN echo "**** MSMTP ****" \
+  && apt-install msmtp
+
 RUN echo "**** Install PHP7.4 ****" \
   && apt-install \
+  lsphp74-apcu \
   lsphp74-common \
-  php-pear \
-  php7.4-apcu \
-  php7.4-common \
-  php7.4-curl \
-  php7.4-dev \
-  php7.4-igbinary \
-  php7.4-imagick  \
-  php7.4-imap \
-  php7.4-intl \
-  php7.4-json \
-  php7.4-ldap- \
-  php7.4-memcached \
-  php7.4-msgpack \
-  php7.4-mysql \
-  php7.4-opcache \
-  php7.4-pgsql- \
-  php7.4-pspell- \
-  php7.4-redis \
-  php7.4-snmp- \
-  php7.4-sqlite3 \
-  php7.4-sybase- \
-  php7.4-tidy-
-
-  #php7.4-modules-source- \
+  lsphp74-curl \
+  lsphp74-dev \
+  lsphp74-igbinary \
+  lsphp74-imagick  \
+  lsphp74-imap \
+  lsphp74-intl \
+  lsphp74-json \
+  lsphp74-ldap- \
+  lsphp74-memcached \
+  lsphp74-modules-source- \
+  lsphp74-msgpack \
+  lsphp74-mysql \
+  lsphp74-opcache \
+  lsphp74-pear \
+  lsphp74-pgsql- \
+  lsphp74-pspell- \
+  lsphp74-redis \
+  lsphp74-snmp- \
+  lsphp74-sqlite3 \
+  lsphp74-sybase- \
+  lsphp74-tidy-
 ## not available for php7.4
 # lsphp74-ioncube
 
 RUN echo "**** Default to PHP7.4 and create symbolic links ****" \
-&& rm -f /usr/bin/php \
-&& rm -f /usr/local/lsws/fcgi-bin/lsphp \
-&& ln -s /usr/local/lsws/lsphp74/bin/php /usr/bin/php \
-&& ln -s /usr/local/lsws/lsphp74/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp
-
-RUN echo "**** MSMTP ****" \
-  && apt-install msmtp
+  && rm -f /usr/bin/php \
+  && rm -f /usr/local/lsws/fcgi-bin/lsphp \
+  && ln -s /usr/local/lsws/lsphp74/bin/php /usr/bin/php \
+  && ln -s /usr/local/lsws/lsphp74/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp
 
 RUN echo "**** Create symbolic links for /etc/php ****" \
   && rm -rf /etc/php \
@@ -68,6 +66,9 @@ RUN echo "**** Create error.log for php ****" \
   && chown nobody:nogroup /usr/local/lsws/logs/php_error.log
 
 COPY rootfs/ /
+
+RUN echo "**** Test PHP ****" \
+   && if /usr/local/lsws/lsphp74/bin/php -v | grep -q -i warning ; then /usr/local/lsws/lsphp74/bin/php -v ; exit 1 ; fi
 
 RUN echo "*** Backup PHP Configs ***" \
   && mkdir -p  /usr/local/lsws/default/php \
@@ -96,7 +97,7 @@ RUN echo "**** Ensure there is no admin password ****" \
   && rm -f /etc/openlitespeed/admin/htpasswd
 
 RUN echo "**** Correct permissions ****" \
-  && chmod +x /etc/cron.hourly/wp-autoupdate \
+  && chmod 0644 /etc/cron.hourly/wp-autoupdate \
   && chmod +x /etc/services.d/tail-log-php-error/run
 
 WORKDIR /var/www/vhosts/localhost/
