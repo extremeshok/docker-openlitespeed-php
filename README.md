@@ -47,7 +47,7 @@ searches for wordpress installs located under /var/www/vhost/fqdn.com/html
 
 # PHP options (with defaults)
 * PHP_TIMEZONE=UTC
-* PHP_MAX_TIME=180 (in seconds)
+* PHP_MAX_TIME=300 (in seconds)
 * PHP_MAX_UPLOAD_SIZE=32 (in mbyte)
 * PHP_MEMORY_LIMIT=256 (in mbyte)
 * PHP_DISABLE_FUNCTIONS=shell_exec (set to false to disable, can use a comma separated list)
