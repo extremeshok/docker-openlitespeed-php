@@ -1,0 +1,15 @@
+#!/usr/bin/with-contenv bash
+################################################################################
+# This is property of eXtremeSHOK.com
+# You are free to use, modify and distribute, however you may not remove this notice.
+# Copyright (c) Adrian Jon Kriel :: admin@extremeshok.com
+################################################################################
+#
+# openlitespeed is unable to directly log to /dev/stdout , so we need to tail the log directly
+#
+# find a solution to tail as nobody
+#exec s6-setuidgid nobody touch /usr/local/lsws/logs/php_error.log && echo "php_error.log" >> /usr/local/lsws/logs/php_error.log && tail -F -n 0 /usr/local/lsws/logs/php_error.log
+
+while true ; do
+  echo "Monitoring php_error.log" >> /usr/local/lsws/logs/php_error.log && tail -F -n 1 /usr/local/lsws/logs/php_error.log
+done

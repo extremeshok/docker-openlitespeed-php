@@ -12,6 +12,8 @@ PHP_INI="/etc/php/litespeed/php.ini"
 ADDITIONAL_PHP_INI="/etc/php/mods-available/"
 
 ###### VARIBLES ######
+XS_WP_AUTOUPDATE_ENABLE=${WP_AUTOUPDATE_ENABLE:-no}
+
 XS_REDIS_SESSIONS=${PHP_REDIS_SESSIONS:-no}
 XS_REDIS_HOST=${PHP_REDIS_HOST:-redis}
 XS_REDIS_PORT=${PHP_REDIS_PORT:-6379}
@@ -24,7 +26,7 @@ XS_MAX_UPLOAD_SIZE=${PHP_MAX_UPLOAD_SIZE:-32}
 XS_MAX_UPLOAD_SIZE="${XS_MAX_UPLOAD_SIZE%m}"
 XS_MAX_UPLOAD_SIZE="${XS_MAX_UPLOAD_SIZE%M}"
 
-XS_MAX_TIME=${PHP_MAX_TIME:-180}
+XS_MAX_TIME=${PHP_MAX_TIME:-300}
 XS_MAX_TIME="${XS_MAX_TIME%s}"
 XS_MAX_TIME="${XS_MAX_TIME%S}"
 
@@ -37,12 +39,22 @@ XS_SMTP_PORT=${PHP_SMTP_PORT:-587}
 XS_SMTP_USER=${PHP_SMTP_USER:-}
 XS_SMTP_PASSWORD=${PHP_SMTP_PASSWORD:-}
 
-
 ###### ECC ######
 
 if [[ $XS_MEMORY_LIMIT -lt 64 ]] ; then
   echo "WARNING: XS_MEMORY_LIMIT if ${XS_MEMORY_LIMIT} too low, setting to 128"
   XS_MEMORY_LIMIT=128
+fi
+if [ "${XS_REDIS_SESSIONS,,}" == "yes" ] || [ "${XS_REDIS_SESSIONS,,}" == "true" ] || [ "${XS_REDIS_SESSIONS,,}" == "on" ] || [ "${XS_REDIS_SESSIONS,,}" == "1" ] ; then
+  XS_REDIS_SESSIONS=true
+else
+  XS_REDIS_SESSIONS=false
+fi
+
+######  Initialize Configs ######
+# Restore configs if they are missing, ie if a new/empty volume was used to store the configs
+if [ ! -f  "$PHP_INI"  ] ; then
+  cp -rf /usr/local/lsws/default/php/* /etc/php/
 fi
 
 ###### MSMTP ######
@@ -91,11 +103,11 @@ if [ -d "$ADDITIONAL_PHP_INI" ] && [ -w "$ADDITIONAL_PHP_INI" ] ; then
     rm -f "${ADDITIONAL_PHP_INI}/xs_msmtp.ini"
   fi
   ## disable functions
-  if [ "$XS_DISABLE_FUNCTIONS" == "no" ] || [ "$XS_DISABLE_FUNCTIONS" == "false" ] || [ "$XS_DISABLE_FUNCTIONS" == "off" ] || [ "$XS_DISABLE_FUNCTIONS" == "0" ] ; then
+  if [ "${XS_DISABLE_FUNCTIONS,,}" == "no" ] || [ "${XS_DISABLE_FUNCTIONS,,}" == "false" ] || [ "${XS_DISABLE_FUNCTIONS,,}" ] || [ "${XS_DISABLE_FUNCTIONS,,}" ] ; then
     echo "" > "${ADDITIONAL_PHP_INI}/xs_disable_functions.conf"
   else
     echo "Disabling functions"
-    echo "php_admin_value[disable_functions] = ${XS_DISABLE_FUNCTIONS}" > "${ADDITIONAL_PHP_INI}/xs_disable_functions.conf"
+    echo "php_admin_value[disable_functions] = ${XS_DISABLE_FUNCTIONS,,}" > "${ADDITIONAL_PHP_INI}/xs_disable_functions.conf"
   fi
   # ioncube
   # if [ "$XS_IONCUBE" == "yes" ] || [ "$XS_IONCUBE" == "true" ] || [ "$XS_IONCUBE" == "on" ] || [ "$XS_IONCUBE" == "1" ] ; then
@@ -105,7 +117,7 @@ if [ -d "$ADDITIONAL_PHP_INI" ] && [ -w "$ADDITIONAL_PHP_INI" ] ; then
   #   rm -f "${ADDITIONAL_PHP_INI}/000000_ioncube.ini"
   # fi
   # Redis sessions
-  if [ "$XS_REDIS_SESSIONS" == "yes" ] || [ "$XS_REDIS_SESSIONS" == "true" ] || [ "$XS_REDIS_SESSIONS" == "on" ] || [ "$XS_REDIS_SESSIONS" == "1" ] ; then
+  if [ $XS_REDIS_SESSIONS ] ; then
     echo "Enabling redis sessions"
     cat << EOF > "${ADDITIONAL_PHP_INI}/xs_redis.ini"
 session.save_handler = redis
@@ -130,6 +142,18 @@ EOF
   echo "memory_limit = ${XS_MEMORY_LIMIT}M" > "${ADDITIONAL_PHP_INI}/xs_memory_limit.ini"
 fi
 
+echo "#### Checking PHP Binaries ####"
+if ! /usr/local/lsws/fcgi-bin/lsphp -v | grep -q "(litespeed)" ; then
+  echo "ERROR: /usr/local/lsws/fcgi-bin/lsphp is not a (litespeed) binary, sleeping ......"
+  sleep 1d
+  exit 1
+fi
+if ! /usr/bin/php -v | grep -q "(cli)" ; then
+  echo "ERROR: /usr/bin/php is not a (cli) binary, sleeping ......"
+  sleep 1d
+  exit 1
+fi
+
 echo "#### Checking PHP configs ####"
 /usr/bin/php -t ${PHP_INI}
 result=$?
@@ -139,8 +163,19 @@ if [ "$result" != "0" ] ; then
   exit 1
 fi
 
+##### wp-autoupdate
+if [ "${XS_WP_AUTOUPDATE_ENABLE,,}" == "yes" ] || [ "${XS_WP_AUTOUPDATE_ENABLE,,}" == "true" ] || [ "${XS_WP_AUTOUPDATE_ENABLE,,}" == "on" ] || [ "${XS_WP_AUTOUPDATE_ENABLE,,}" == "1" ] ; then
+  if [ ! -f "/etc/cron.hourly/generate-vhost-cron" ] ; then
+    echo "#!/usr/bin/env bash" > /etc/cron.hourly/wp-autoupdate
+    echo "bash /xshok-wp-autoupdate.sh >> /tmp/autoupdate" >> /etc/cron.hourly/wp-autoupdate
+    chmod +x /etc/cron.hourly/wp-autoupdate
+  fi
+else
+  rm -f "/etc/cron.hourly/wp-autoupdate"
+fi
+
 ###### WAIT FOR REDIS SERVER ######
-if [ "$XS_REDIS_SESSIONS" == "yes" ] || [ "$XS_REDIS_SESSIONS" == "true" ] || [ "$XS_REDIS_SESSIONS" == "on" ] || [ "$XS_REDIS_SESSIONS" == "1" ] ; then
+if [ $XS_REDIS_SESSIONS ] ; then
   # wait for redis to start
   echo "waiting for redis ${XS_REDIS_HOST}:${XS_REDIS_PORT}"
   while ! echo PING | nc -q 10  ${XS_REDIS_HOST} ${XS_REDIS_PORT} ; do
@@ -148,25 +183,3 @@ if [ "$XS_REDIS_SESSIONS" == "yes" ] || [ "$XS_REDIS_SESSIONS" == "true" ] || [ 
     sleep 5s
   done
 fi
-
-######  Generate crontab ######
-# busybox only allows for a single cron, all cron will be run as the nobody user
-if [ ! -f "/etc/cron.d/*" ] ; then
-  echo "Generating single crontab from cronjobs in /etc/cron.d/"
-  cat /etc/cron.d/* | crontab -u nobody -
-fi
-
-######  Initialize Configs ######
-# Restore configs if they are missing, ie if a new/empty volume was used to store the configs
-if [ ! -f  "/etc/openlitespeed/httpd_config.conf" ] || [ ! -f  "/etc/openlitespeed/admin/admin_config.conf" ] ; then
-  cp -rf /usr/local/lsws/default-config/* /etc/openlitespeed/
-fi
-
-###### LAUNCH LITESPEEED SERVER ######
-/usr/local/lsws/bin/lswsctrl start
-while true; do
-  if ! /usr/local/lsws/bin/lswsctrl status | grep -q "litespeed is running with PID" ; then
-    break
-  fi
-  sleep 60
-done
