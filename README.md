@@ -19,6 +19,7 @@
 * WP-CLI
 * Expose php disabled
 * msmtp enabled: send email via external smtp server, requires SMTP_HOST, SMTP_USER, SMTP_PASS
+* Increased php pcre limits
 
 # PHP options (with defaults)
 * PHP_TIMEZONE=UTC
