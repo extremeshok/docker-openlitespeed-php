@@ -1,5 +1,5 @@
 # docker-openlitespeed-php
-# eXtremeSHOK.com Docker OpenLiteSpeed with mod_security and pagespeed and PHP 7.4 on Ubuntu LTS 20.04
+# eXtremeSHOK.com Docker OpenLiteSpeed with modsecurity and pagespeed and PHP 7.4 on Ubuntu LTS 20.04
 
 ## Uses the base image extremeshok/openlitespeed : https://hub.docker.com/repository/docker/extremeshok/openlitespeed
 
@@ -7,7 +7,11 @@
 
 * Ubuntu LTS 20.04 with S6
 * cron (/etc/cron.d) enabled for scheduling tasks, run as user nobody
+* Bubblewrap ready
+* Preinstalled IP2Location DB , updated monthly on start (IP2LOCATION-LITE-DB1.IPV6.BIN from https://lite.ip2location.com)
+* IP2Location running in Shared Memory DB Cache
 * Optimized OpenLiteSpeed configs
+* Optimised HTTP Headers for Security (Content Security Policy (CSP), Access-Control-Allow-Methods, Content-Security-Policy, Strict-Transport-Security, X-Content-Type-Options, X-DNS-Prefetch-Control, X-Frame-Options, X-XSS-Protection)
 * Optimized PHP configs
 * session, memcached, apc serializer set to igbinary
 * OpenLiteSpeed installed via github releases (always newer than the repo)
@@ -30,6 +34,7 @@
 * Expose php disabled
 * msmtp enabled: send email via external smtp server, requires SMTP_HOST, SMTP_USER, SMTP_PASS
 * Increased php pcre limits
+* Outputs platform information on start
 
 # VHOST_CRON_ENABLE (disabled by default)
 ## generate vhost cron from cron files located in vhost/cron (hourly)
