@@ -33,11 +33,11 @@ if [ -d "${VHOST_DIR}" ] ; then
     echo "Processing: ${wp_path}"
     if [ ! -f  "${wp_path}/autoupdate.disable" ] ; then
       # path contains /html , remeber files are always located under vhost/html
-      if wp-cli --allow-root --path="${wp_path}" core is-installed ; then
+      if sudo -u nobody /usr/local/bin/wp-cli --path="${wp_path}" core is-installed ; then
         echo "- Valid wordpress"
 
         echo "-- plugin"
-        result=$(wp-cli --allow-root --path="${wp_path}" plugin update --all 2>&1)
+        result=$(sudo -u nobody /usr/local/bin/wp-cli --path="${wp_path}" plugin update --all 2>&1)
         result_short=${result##*$'\n'}
         if [[ "${result_short,,}" != *"no plugins updated"* ]] && [[ "${result_short,,}" != *"already updated"* ]]  ; then
             echo "PLUGIN/s UPDATED"
@@ -46,7 +46,7 @@ if [ -d "${VHOST_DIR}" ] ; then
         fi
 
         echo "--  theme"
-        result=$(wp-cli --allow-root --path="${wp_path}" theme update --all 2>&1)
+        result=$(sudo -u nobody /usr/local/bin/wp-cli --path="${wp_path}" theme update --all 2>&1)
         result_short=${result##*$'\n'}
         if [[ "${result_short,,}" != *"no themes updated"* ]] && [[ "${result_short,,}" != *"already updated"* ]] ; then
             echo "THEME UPDATED!!"
@@ -55,10 +55,10 @@ if [ -d "${VHOST_DIR}" ] ; then
         fi
 
         echo "-- core and core-db"
-        result=$(wp-cli --allow-root --path="${wp_path}" core update 2>&1 )
+        result=$(sudo -u nobody /usr/local/bin/wp-cli --path="${wp_path}" core update 2>&1 )
         result_short=${result##*$'\n'}
         if [[ "${result_short,,}" != *"wordpress is up to date"* ]] ; then
-            result_two=$(wp-cli --allow-root --path="${wp_path}" core update-db 2>&1)
+            result_two=$(sudo -u nobody /usr/local/bin/wp-cli --path="${wp_path}" core update-db 2>&1)
             echo "CORE UPDATED!!"
             updated="core"
             if [ $XS_WP_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
@@ -66,7 +66,7 @@ if [ -d "${VHOST_DIR}" ] ; then
         fi
 
         echo "-- woocommerce"
-        result=$(wp-cli --allow-root --path="${wp_path}" wc update 2>&1)
+        result=$(sudo -u nobody /usr/local/bin/wp-cli --path="${wp_path}" wc update 2>&1)
         result_short=${result##*$'\n'}
         if [[ "${result_short,,}" != *"no updates required"* ]] && [[ "${result_short,,}" != *"did you mean"* ]] && [[ "${result_short,,}" != *"already updated"* ]] ; then
             echo "WC UPDATED!!"
@@ -77,35 +77,33 @@ if [ -d "${VHOST_DIR}" ] ; then
         if [ "$updated" != "" ] ; then
           echo "- Flushing caches due to update : ${updated}"
 
-          result=$(wp-cli --allow-root --path="${wp_path}" rewrite flush 2>&1)
+          result=$(sudo -u nobody /usr/local/bin/wp-cli --path="${wp_path}" rewrite flush 2>&1)
           result_short=${result##*$'\n'}
           if [[ "${result_short,,}" == *"rewrite rules flushed"* ]] ; then
               echo "-- Rewrite rules flushed"
               if [ $XS_WP_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
           fi
 
-          result=$(wp-cli --allow-root --path="${wp_path}" transient delete --all 2>&1)
+          result=$(sudo -u nobody /usr/local/bin/wp-cli --path="${wp_path}" transient delete --all 2>&1)
           result_short=${result##*$'\n'}
           if [[ "${result_short,,}" == *"transients deleted from"* ]] ; then
               echo "-- All transients deleted"
               if [ $XS_WP_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
           fi
 
-          result=$(wp-cli --allow-root --path="${wp_path}" cache flush 2>&1)
+          result=$(sudo -u nobody /usr/local/bin/wp-cli --path="${wp_path}" cache flush 2>&1)
           result_short=${result##*$'\n'}
           if [[ "${result_short,,}" == *"cache was flushed"* ]] ; then
               echo "-- Cache was flushed"
               if [ $XS_WP_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
           fi
 
-          result=$(wp-cli --allow-root --path="${wp_path}" lscache-purge all 2>&1)
+          result=$(sudo -u nobody /usr/local/bin/wp-cli --path="${wp_path}" lscache-purge all 2>&1)
           result_short=${result##*$'\n'}
           if [[ "${result_short,,}" == *"purged all"* ]] ; then
               echo "-- Purged all lscache"
               if [ $XS_WP_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
           fi
-          #fix ownership to prevent issues
-          chown -R nobody:nogroup "${wp_path}"
         fi
       fi
     fi
