@@ -10,11 +10,8 @@ USER root
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN echo "**** Install fontconfig ****" \
-  && apt-install fontconfig
-
-RUN echo "**** MSMTP ****" \
-  && apt-install msmtp
+RUN echo "**** Install packages ****" \
+  && apt-install fontconfig msmtp sudo
 
 RUN echo "**** Install PHP7.4 ****" \
   && apt-install \

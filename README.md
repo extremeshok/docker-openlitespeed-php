@@ -7,7 +7,6 @@
 
 * Ubuntu LTS 20.04 with S6
 * cron (/etc/cron.d) enabled for scheduling tasks, run as user nobody
-* Bubblewrap ready
 * Preinstalled IP2Location DB , updated monthly on start (IP2LOCATION-LITE-DB1.IPV6.BIN from https://lite.ip2location.com)
 * IP2Location running in Shared Memory DB Cache
 * Optimized OpenLiteSpeed configs
@@ -30,7 +29,7 @@
 * PHP 7.4 (lsphp74)
 * Composer
 * PHPUnit
-* WP-CLI
+* WP-CLI , (use comamnd ***wp*** , this will run wp-cli as the nobody user)
 * Expose php disabled
 * msmtp enabled: send email via external smtp server, requires SMTP_HOST, SMTP_USER, SMTP_PASS
 * Increased php pcre limits
@@ -118,4 +117,8 @@ Place files in **/var/www/vhosts/fqdn.com/** , see example **/var/www/vhosts/loc
 replace container name with the container name, eg xs_openlitespeed-_1
 ```
 docker exec -ti containername /bin/bash '/usr/local/lsws/admin/misc/admpass.sh'
+```
+# Check the headers
+```
+curl -XGET --resolve domain.com:443:ip.ad.re.ss https://domain.com -k -I
 ```
