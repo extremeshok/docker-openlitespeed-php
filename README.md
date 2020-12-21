@@ -34,6 +34,7 @@
 * msmtp enabled: send email via external smtp server, requires SMTP_HOST, SMTP_USER, SMTP_PASS
 * Increased php pcre limits
 * Outputs platform information on start
+* mariadb-client (mysql command) added as this is required for wp-cli
 
 # VHOST_CRON_ENABLE (disabled by default)
 ## generate vhost cron from cron files located in vhost/cron (hourly)

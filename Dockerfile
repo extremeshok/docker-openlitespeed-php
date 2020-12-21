@@ -11,7 +11,7 @@ USER root
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN echo "**** Install packages ****" \
-  && apt-install fontconfig msmtp sudo
+  && apt-install fontconfig msmtp sudo mariadb-client
 
 RUN echo "**** Install PHP7.4 ****" \
   && apt-install \
