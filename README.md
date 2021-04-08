@@ -1,11 +1,11 @@
 # docker-openlitespeed-php
-# eXtremeSHOK.com Docker OpenLiteSpeed with modsecurity and pagespeed and PHP 7.4 on Ubuntu LTS 20.04
+# eXtremeSHOK.com Docker OpenLiteSpeed with modsecurity and pagespeed and PHP 7.4 on Ubuntu LTS
 
 ## Uses the base image extremeshok/openlitespeed : https://hub.docker.com/repository/docker/extremeshok/openlitespeed
 
 ## Checkout our optimized production web-server setup based on docker https://github.com/extremeshok/docker-webserver
 
-* Ubuntu LTS 20.04 with S6
+* Ubuntu LTS with S6
 * cron (/etc/cron.d) enabled for scheduling tasks, run as user nobody
 * Preinstalled IP2Location DB , updated monthly on start (IP2LOCATION-LITE-DB1.IPV6.BIN from https://lite.ip2location.com)
 * IP2Location running in Shared Memory DB Cache

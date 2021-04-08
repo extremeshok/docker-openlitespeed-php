@@ -1,4 +1,4 @@
-FROM extremeshok/openlitespeed:20.04 AS BUILD
+FROM extremeshok/openlitespeed:latest AS BUILD
 LABEL mantainer="Adrian Kriel <admin@extremeshok.com>" vendor="eXtremeSHOK.com"
 ################################################################################
 # This is property of eXtremeSHOK.com
