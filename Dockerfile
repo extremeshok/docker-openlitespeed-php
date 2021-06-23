@@ -104,7 +104,7 @@ RUN echo "**** Correct permissions ****" \
   && chmod 0644 /etc/cron.hourly/vhost-autoupdate \
   && chmod +x /etc/services.d/*/run \
   && chmod +x /etc/services.d/*/finish \
-  && chmod +x /xshok-*.sh \
+  && chmod +x /xshok-*.sh
 
 WORKDIR /var/www/vhosts/localhost/
 
