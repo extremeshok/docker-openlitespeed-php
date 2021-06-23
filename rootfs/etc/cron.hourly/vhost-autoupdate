@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+while ! /usr/local/lsws/bin/lswsctrl status | grep -q "litespeed is running with PID" ; do
+	echo "Waiting for OpenLiteSpeed to start"
+  sleep 10s
+done
+
+if [ -f  /xshok-vhost-autoupdate.sh ] ; then
+  echo $(date) >> /tmp/autoupdate
+  bash /xshok-vhost-autoupdate.sh >> /tmp/autoupdate
+fi

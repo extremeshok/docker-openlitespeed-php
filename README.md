@@ -5,8 +5,12 @@
 
 ## Checkout our optimized production web-server setup based on docker https://github.com/extremeshok/docker-webserver
 
+## Note all configs are optimized and designed for production usage
+
 * Ubuntu LTS with S6
+* Will detect and apply new ssl certs automatically (WATCHMEDO_CERTS_ENABLE)
 * cron (/etc/cron.d) enabled for scheduling tasks, run as user nobody
+* cron runs every 1 minute, and will generate a new vhost cron every 15mins *if vhost_cron is enabled*
 * Preinstalled IP2Location DB , updated monthly on start (IP2LOCATION-LITE-DB1.IPV6.BIN from https://lite.ip2location.com)
 * IP2Location running in Shared Memory DB Cache
 * Optimized OpenLiteSpeed configs
@@ -33,23 +37,40 @@
 * Expose php disabled
 * msmtp enabled: send email via external smtp server, requires SMTP_HOST, SMTP_USER, SMTP_PASS
 * Increased php pcre limits
+* xshok-vhost-fix-permissions, xshok-vhost-generate-cron and xshok-vhost-monitor-certs are all non-blocking (runs parallel)
 * Outputs platform information on start
 * mariadb-client (mysql command) added as this is required for wp-cli
 * vim-tiny to provide ex which allows for advanced modification of files
 
-# VHOST_CRON_ENABLE (disabled by default)
-## generate vhost cron from cron files located in vhost/cron (hourly)
-* set VHOST_CRON_ENABLE to true to enable, disabled by default
+# VHOST_FIX_PERMISSIONS (enabled by default)
+## Fix the vhosts folder and file perssions of the vhosts html directory
+* set VHOST_FIX_PERMISSIONS to false to disable, enabled by default
+* set XS_VHOST_FIX_PERMISSIONS_FOLDERS to false to disable fixing folder permissions, enabled by default
+* set XS_VHOST_FIX_PERMISSIONS_FILES to false to disable fixing file permissions, enabled by default
+* set XS_VHOST_FIX_PERMISSIONS_FOLDERS to false to disable, enabled by default
+
+# VHOST_CRON (disabled by default)
+## generate cron from cron files located in vhost/cron (hourly)
+* set VHOST_CRON to true to enable, disabled by default
 * finds all vhost/cron files and places them in the /etc/cron.d/ , runs hourly
+* ignores  *.readme *.disabled *.disable *.txt *.sample files
+* cron runs every 1 minute, and will generate a new vhost cron every 15mins
 * Place cron files in **/var/www/vhosts/fqdn.com/cron** , see example **/var/www/vhosts/localhost/cron/example**
 
-# WP_AUTOUPDATE_ENABLE (disabled by default)
+# VHOST_MONITOR_CERTS (enabled by default)
+## Gracefully restarts openlitespeed to apply certificate updates, will only restart once every 300s
+* set VHOST_MONITOR_CERTS to false to disable, enabled by default
+* monitors /var/www/vhosts/*/certs, looking for changes (only detects *.pem)
+
+# VHOST_AUTOUPDATE (enabled by default)
+# VHOST_AUTOUPDATE_WP (enabled by default)
 ## Automatically update all wordpress installs (hourly)
-searches for wordpress installs located under /var/www/vhost/fqdn.com/html
+* searches for wordpress installs located under /var/www/vhost/fqdn.com/html
 * updates a wordpress wordpress (plugins, themes, core, core-db, woocommerce)
 * if there was an update, caches are flushed (rewrites, transient, cache, lscache)  
-* Set WP_AUTOUPDATE_ENABLE to true to enable, disabled by default
-* Set WP_AUTOUPDATE_DEBUG to true to enable debug output, disabled by default
+* Set VHOST_AUTOUPDATE to false to disable, enabled by default
+* Set VHOST_AUTOUPDATE_WP to false to disable, enabled by default
+* Set VHOST_AUTOUPDATE_DEBUG to true to enable debug output, disabled by default
 * To disable a specific wordpress install from Automatic updates, create a blank "autoupdate.disable" file in the wordpress directory (ie. directory which contains wp-config.php)
 
 # PHP options (with defaults)

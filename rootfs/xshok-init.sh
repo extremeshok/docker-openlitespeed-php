@@ -12,7 +12,8 @@ PHP_INI="/etc/php/litespeed/php.ini"
 ADDITIONAL_PHP_INI="/etc/php/mods-available/"
 
 ###### VARIBLES ######
-XS_WP_AUTOUPDATE_ENABLE=${WP_AUTOUPDATE_ENABLE:-no}
+# Support legacy varible
+XS_VHOST_AUTOUPDATE_WP=${VHOST_AUTOUPDATE_WP:-no}
 
 XS_REDIS_SESSIONS=${PHP_REDIS_SESSIONS:-no}
 XS_REDIS_HOST=${PHP_REDIS_HOST:-redis}
@@ -161,17 +162,6 @@ if [ "$result" != "0" ] ; then
   echo "ERROR: CONFIG DAMAGED, sleeping ......"
   sleep 1d
   exit 1
-fi
-
-##### wp-autoupdate
-if [ "${XS_WP_AUTOUPDATE_ENABLE,,}" == "yes" ] || [ "${XS_WP_AUTOUPDATE_ENABLE,,}" == "true" ] || [ "${XS_WP_AUTOUPDATE_ENABLE,,}" == "on" ] || [ "${XS_WP_AUTOUPDATE_ENABLE,,}" == "1" ] ; then
-  if [ ! -f "/etc/cron.hourly/generate-vhost-cron" ] ; then
-    echo "#!/usr/bin/env bash" > /etc/cron.hourly/wp-autoupdate
-    echo "bash /xshok-wp-autoupdate.sh >> /tmp/autoupdate" >> /etc/cron.hourly/wp-autoupdate
-    chmod +x /etc/cron.hourly/wp-autoupdate
-  fi
-else
-  rm -f "/etc/cron.hourly/wp-autoupdate"
 fi
 
 ###### WAIT FOR REDIS SERVER ######

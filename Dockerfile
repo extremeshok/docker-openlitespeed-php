@@ -101,7 +101,7 @@ RUN echo "**** Ensure there is no admin password ****" \
   && rm -f /etc/openlitespeed/admin/htpasswd
 
 RUN echo "**** Correct permissions ****" \
-  && chmod 0644 /etc/cron.hourly/wp-autoupdate \
+  && chmod 0644 /etc/cron.hourly/vhost-autoupdate \
   && chmod +x /etc/services.d/tail-log-php-error/run \
   && chown -R nobody:nogroup /nonexistent/.wp-cli
 
