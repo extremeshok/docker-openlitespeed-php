@@ -94,16 +94,17 @@ RUN echo "**** Install WP-CLI ****" \
     && wget -q https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp-cli \
     && chmod +x /usr/local/bin/wp-cli \
+    && chown -R nobody:nogroup /nonexistent/.wp-cli \
     && mkdir -p /nonexistent/.wp-cli/cache
-
 
 RUN echo "**** Ensure there is no admin password ****" \
   && rm -f /etc/openlitespeed/admin/htpasswd
 
 RUN echo "**** Correct permissions ****" \
   && chmod 0644 /etc/cron.hourly/vhost-autoupdate \
-  && chmod +x /etc/services.d/tail-log-php-error/run \
-  && chown -R nobody:nogroup /nonexistent/.wp-cli
+  && chmod +x /etc/services.d/*/run \
+  && chmod +x /etc/services.d/*/finish \
+  && chmod +x /xshok-*.sh \
 
 WORKDIR /var/www/vhosts/localhost/
 
