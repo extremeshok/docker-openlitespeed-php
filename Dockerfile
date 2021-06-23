@@ -94,8 +94,8 @@ RUN echo "**** Install WP-CLI ****" \
     && wget -q https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp-cli \
     && chmod +x /usr/local/bin/wp-cli \
-    && chown -R nobody:nogroup /nonexistent/.wp-cli \
-    && mkdir -p /nonexistent/.wp-cli/cache
+    && mkdir -p /nonexistent/.wp-cli/cache \
+    && chown -R nobody:nogroup /nonexistent/.wp-cli
 
 RUN echo "**** Ensure there is no admin password ****" \
   && rm -f /etc/openlitespeed/admin/htpasswd
