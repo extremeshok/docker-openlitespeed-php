@@ -102,9 +102,9 @@ RUN echo "**** Ensure there is no admin password ****" \
 
 RUN echo "**** Correct permissions ****" \
   && chmod 0644 /etc/cron.hourly/vhost-autoupdate \
-  && chmod +x /etc/services.d/*/run \
-  && chmod +x /etc/services.d/*/finish \
-  && chmod +x /xshok-*.sh
+  && chmod 755 /etc/services.d/*/run \
+  && chmod 755 /etc/services.d/*/finish \
+  && chmod 755 /xshok-*.sh
 
 WORKDIR /var/www/vhosts/localhost/
 
