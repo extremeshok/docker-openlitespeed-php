@@ -12,7 +12,6 @@
 # Set VHOST_AUTOUPDATE_WP to "no" to disable
 # Set VHOST_AUTOUPDATE_DEBUG to "yes" to enable debug output of the wp-cli commands
 #
-#
 #################################################################################
 
 ## enable case insensitve matching
@@ -35,6 +34,7 @@ fi
 if [ "${XS_VHOST_AUTOUPDATE,,}" == "yes" ] || [ "${XS_VHOST_AUTOUPDATE,,}" == "true" ] || [ "${XS_VHOST_AUTOUPDATE,,}" == "on" ] || [ "${XS_VHOST_AUTOUPDATE,,}" == "1" ] ; then
   vhost_dir="$(realpath -s "${XS_VHOST_DIR}")"
   if [ -d "${vhost_dir}" ] ; then
+################# WP : BEGIN
     if [ "${XS_VHOST_AUTOUPDATE_WP,,}" == "yes" ] || [ "${XS_VHOST_AUTOUPDATE_WP,,}" == "true" ] || [ "${XS_VHOST_AUTOUPDATE_WP,,}" == "on" ] || [ "${XS_VHOST_AUTOUPDATE_WP,,}" == "1" ] ; then
       while IFS= read -r wp_path ; do
         updated=""
@@ -42,7 +42,7 @@ if [ "${XS_VHOST_AUTOUPDATE,,}" == "yes" ] || [ "${XS_VHOST_AUTOUPDATE,,}" == "t
         if [ ! -f  "${wp_path}/autoupdate.disable" ] ; then
           # path contains /html , remeber files are always located under vhost/html
           if sudo -u nobody /usr/local/bin/wp-cli --path="${wp_path}" core is-installed ; then
-            echo "- Valid wordpress"
+            echo "- Valid wordpress install"
 
             echo "-- plugin"
             result=$(sudo -u nobody /usr/local/bin/wp-cli --path="${wp_path}" plugin update --all 2>&1)
@@ -53,7 +53,7 @@ if [ "${XS_VHOST_AUTOUPDATE,,}" == "yes" ] || [ "${XS_VHOST_AUTOUPDATE,,}" == "t
               if [ $XS_VHOST_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
             fi
 
-            echo "--  theme"
+            echo "-- theme"
             result=$(sudo -u nobody /usr/local/bin/wp-cli --path="${wp_path}" theme update --all 2>&1)
             result_short=${result##*$'\n'}
             if [[ "${result_short,,}" != *"no themes updated"* ]] && [[ "${result_short,,}" != *"already updated"* ]] ; then
@@ -62,7 +62,7 @@ if [ "${XS_VHOST_AUTOUPDATE,,}" == "yes" ] || [ "${XS_VHOST_AUTOUPDATE,,}" == "t
               if [ $XS_VHOST_AUTOUPDATE_DEBUG ] ; then echo "$result" ; fi
             fi
 
-            echo "-- core and core-db"
+            echo "-- core & core-db"
             result=$(sudo -u nobody /usr/local/bin/wp-cli --path="${wp_path}" core update 2>&1 )
             result_short=${result##*$'\n'}
             if [[ "${result_short,,}" != *"wordpress is up to date"* ]] ; then
@@ -117,6 +117,7 @@ if [ "${XS_VHOST_AUTOUPDATE,,}" == "yes" ] || [ "${XS_VHOST_AUTOUPDATE,,}" == "t
         fi
       done < <(find "${vhost_dir}" -path "*/html/*" -type f -name "wp-config.php" -printf '%h\n' | sort | uniq)  #dirs
     fi
+################# WP : END
   else
     echo "ERROR: ${vhost_dir} is not a directory"
   fi
