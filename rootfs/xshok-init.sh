@@ -40,6 +40,8 @@ XS_SMTP_PORT=${PHP_SMTP_PORT:-587}
 XS_SMTP_USER=${PHP_SMTP_USER:-}
 XS_SMTP_PASSWORD=${PHP_SMTP_PASSWORD:-}
 
+XS_ERRORS_ONLY=${PHP_ERRORS_ONLY:-yes}
+
 ###### ECC ######
 
 if [[ $XS_MEMORY_LIMIT -lt 64 ]] ; then
@@ -50,6 +52,11 @@ if [ "${XS_REDIS_SESSIONS,,}" == "yes" ] || [ "${XS_REDIS_SESSIONS,,}" == "true"
   XS_REDIS_SESSIONS=true
 else
   XS_REDIS_SESSIONS=false
+fi
+if [ "${XS_ERRORS_ONLY,,}" == "yes" ] || [ "${XS_ERRORS_ONLY,,}" == "true" ] || [ "${XS_ERRORS_ONLY,,}" == "on" ] || [ "${XS_ERRORS_ONLY,,}" == "1" ] ; then
+  XS_ERRORS_ONLY=true
+else
+  XS_ERRORS_ONLY=false
 fi
 
 ######  Initialize Configs ######
@@ -127,6 +134,15 @@ EOF
   elif [ -f "${ADDITIONAL_PHP_INI}/xs_redis.ini" ] ; then
     rm -f "${ADDITIONAL_PHP_INI}/xs_redis.ini"
   fi
+  # Error messages only
+  if [ $XS_ERRORS_ONLY ] ; then
+    echo "Enabling redis sessions"
+    cat << EOF > "${ADDITIONAL_PHP_INI}/xs_errors_only.ini"
+error_reporting = E_ERROR & E_RECOVERABLE_ERROR & E_CORE_ERROR & E_USER_ERROR
+EOF
+  elif [ -f "${ADDITIONAL_PHP_INI}/xs_errors_only.ini" ] ; then
+    rm -f "${ADDITIONAL_PHP_INI}/xs_errors_only.ini"
+  fi
   # timezone
   echo "date.timezone = ${XS_TIMEZONE}" > "${ADDITIONAL_PHP_INI}/xs_timezone.ini"
   # execution times
@@ -142,7 +158,6 @@ EOF
   # memory limit
   echo "memory_limit = ${XS_MEMORY_LIMIT}M" > "${ADDITIONAL_PHP_INI}/xs_memory_limit.ini"
 fi
-
 echo "#### Checking PHP Binaries ####"
 if ! /usr/local/lsws/fcgi-bin/lsphp -v | grep -q "(litespeed)" ; then
   echo "ERROR: /usr/local/lsws/fcgi-bin/lsphp is not a (litespeed) binary, sleeping ......"

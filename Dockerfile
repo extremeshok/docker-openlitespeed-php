@@ -69,8 +69,11 @@ RUN echo "**** Create error.log for php ****" \
 
 COPY rootfs/ /
 
-RUN echo "**** Test PHP has no errors ****" \
+RUN echo "**** Test PHP has no warnings ****" \
    && if /usr/local/lsws/lsphp74/bin/php -v | grep -q -i warning ; then /usr/local/lsws/lsphp74/bin/php -v ; exit 1 ; fi
+
+RUN echo "**** Test PHP has no errors ****" \
+   && if /usr/local/lsws/lsphp74/bin/php -v | grep -q -i error ; then /usr/local/lsws/lsphp74/bin/php -v ; exit 1 ; fi
 
 RUN echo "*** Backup PHP Configs ***" \
   && mkdir -p  /usr/local/lsws/default/php \

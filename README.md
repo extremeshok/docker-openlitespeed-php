@@ -79,6 +79,8 @@
 * PHP_MAX_UPLOAD_SIZE=32 (in mbyte)
 * PHP_MEMORY_LIMIT=256 (in mbyte)
 * PHP_DISABLE_FUNCTIONS=shell_exec (set to false to disable, can use a comma separated list)
+## Enable PHP Error messages only (error_reporting = E_ERROR & E_RECOVERABLE_ERROR & E_CORE_ERROR & E_USER_ERROR)
+* PHP_ERRORS_ONLY=yes
 ## Enable PHP-Redis-sessions (disabled by default)
 * PHP_REDIS_SESSIONS=yes
 * PHP_REDIS_HOST=redis
