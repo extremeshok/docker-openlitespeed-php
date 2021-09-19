@@ -4,6 +4,7 @@ services:
 ###### xshok-openlitespeed-php
     openlitespeed:
       image: extremeshok/openlitespeed-php:latest
+      shm_size:  128M
       depends_on:
         - redis
         - mysql

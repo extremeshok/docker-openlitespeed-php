@@ -41,6 +41,7 @@
 * Outputs platform information on start
 * mariadb-client (mysql command) added as this is required for wp-cli
 * vim-tiny to provide ex which allows for advanced modification of files
+* opcode caching in shared memory enabled
 
 # VHOST_FIX_PERMISSIONS (enabled by default)
 ## Fix the vhosts folder and file perssions of the vhosts html directory
