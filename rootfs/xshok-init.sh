@@ -101,6 +101,8 @@ EOF
   fi
 fi
 
+mkdir -p "/var/www/vhosts/.opcache"
+
 ###### CONFIGURE PHP ######
 if [ -d "$ADDITIONAL_PHP_INI" ] && [ -w "$ADDITIONAL_PHP_INI" ] ; then
   # MSMTP
@@ -178,8 +180,6 @@ if [ "$result" != "0" ] ; then
   sleep 1d
   exit 1
 fi
-
-mkdir -p "/var/www/vhosts/.opcache"
 
 ###### WAIT FOR REDIS SERVER ######
 if [ $XS_REDIS_SESSIONS ] ; then
