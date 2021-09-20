@@ -179,6 +179,8 @@ if [ "$result" != "0" ] ; then
   exit 1
 fi
 
+mkdir -p "/var/www/vhosts/.opcache"
+
 ###### WAIT FOR REDIS SERVER ######
 if [ $XS_REDIS_SESSIONS ] ; then
   # wait for redis to start
